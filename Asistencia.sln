@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Asistencia", "Asistencia\Asistencia.csproj", "{B17383FF-6265-4FB1-9636-F56F2370570A}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Asistencias", "Asistencias\Asistencias.vdproj", "{7138EC17-9DDA-4106-8655-8201E2EEA193}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,12 +27,6 @@ Global
 		{B17383FF-6265-4FB1-9636-F56F2370570A}.Release|x64.Build.0 = Release|Any CPU
 		{B17383FF-6265-4FB1-9636-F56F2370570A}.Release|x86.ActiveCfg = Release|x86
 		{B17383FF-6265-4FB1-9636-F56F2370570A}.Release|x86.Build.0 = Release|x86
-		{7138EC17-9DDA-4106-8655-8201E2EEA193}.Debug|Any CPU.ActiveCfg = Debug
-		{7138EC17-9DDA-4106-8655-8201E2EEA193}.Debug|x64.ActiveCfg = Debug
-		{7138EC17-9DDA-4106-8655-8201E2EEA193}.Debug|x86.ActiveCfg = Debug
-		{7138EC17-9DDA-4106-8655-8201E2EEA193}.Release|Any CPU.ActiveCfg = Release
-		{7138EC17-9DDA-4106-8655-8201E2EEA193}.Release|x64.ActiveCfg = Release
-		{7138EC17-9DDA-4106-8655-8201E2EEA193}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

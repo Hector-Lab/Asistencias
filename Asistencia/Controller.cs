@@ -28,6 +28,7 @@ namespace Asistencia
             screenH = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
             screenW = 1000;
         }
+
         public int Comprobando()
         {
             int configurar = 0;
@@ -547,7 +548,6 @@ namespace Asistencia
                 {
                     //Procesamos la imagen 
                     String direccionImagem = await apiservice.ObtenerRecursoImagen(cliente, item.idRepositorio);
-                    Console.WriteLine(direccionImagem);
                     if (!direccionImagem.Equals("null"))
                     {
                         WebClient web = new WebClient();
@@ -609,6 +609,7 @@ namespace Asistencia
                         }
                         catch (Exception e)
                         {
+                            dbservice.GuardarRegistrosErrores("-1", "Error al descargar la imagen", DateTime.Now.ToString(), e.Message);
                             bool saved = false;
                             //La cambiamos por un while para hacer fuerza
                             int intentos = 0;
@@ -630,7 +631,7 @@ namespace Asistencia
                                 }
                                 catch (Exception err)
                                 {
-                                    Console.WriteLine(err.Message);
+                                    dbservice.GuardarRegistrosErrores("-1", "Error al descargar la imagen " + intentos + " - " + imgName, DateTime.Now.ToString(), err.Message);
                                     saved = false;
                                     intentos++;
                                     if(intentos> 10)
@@ -836,6 +837,7 @@ namespace Asistencia
                         {
                             worker = new BackgroundWorker();
                         }
+                        
                         if (!worker.IsBusy)
                         {
                             tarea = Convert.ToString(bitacora.id);
@@ -846,6 +848,8 @@ namespace Asistencia
                 }
                 else
                 {
+                    //actualizamos la conexion para mostrar que el dispositivo este activo 
+                    await apiservice.ActualizarConexion(cliente, Checador, uid, nombre);
                     Console.WriteLine("Bitacora vacia!!");
                 }
             }
@@ -961,7 +965,9 @@ namespace Asistencia
         public async void enviarAsistenciaWorker(object sender, DoWorkEventArgs e)
         {
             String cliente = dbservice.ObtenerItem("Storage:Cliente");
+            String uid = dbservice.ObtenerItem("Storage:UID");
             String Checador = dbservice.ObtenerItem("Storage:idChecador");
+            String nombre = dbservice.ObtenerItem("Storage:Nombre");
             enviarAsistenciasGuardadas();
             //Borramos la base de datos
             dbservice.EliminarTabla("Empleado");
@@ -990,7 +996,8 @@ namespace Asistencia
 
             }
             //Actualizamos la conexion
-            await apiservice.ActualizarBitacora(cliente, Checador ,tarea);
+            await apiservice.ActualizarBitacora(cliente, Checador ,"10");
+            await apiservice.ActualizarConexion(cliente, Checador, uid, nombre);
         }
         public async Task<bool> VerificarCambioBanner()
         {
@@ -1011,6 +1018,7 @@ namespace Asistencia
             Console.WriteLine("Primero paso");
             return dbservice.VerificarBanner();
         }
+        
     }
     
 }

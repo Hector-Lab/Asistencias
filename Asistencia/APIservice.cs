@@ -11,9 +11,10 @@ namespace Asistencia
 
     public class APIservice
     {
+        readonly DBservice dBservice;
         public APIservice()
         {
-
+            dBservice = new DBservice();
         }
         public async Task<List<Cliente>> ListaClientes()
         {
@@ -43,6 +44,7 @@ namespace Asistencia
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                dBservice.GuardarRegistrosErrores("-1","Error al Obtener los clientes", DateTime.Now.ToString(),e.Message);
                 return ListaClientes;
             }
         }
@@ -74,6 +76,7 @@ namespace Asistencia
             }
             catch (Exception error)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error al obtener los sectores", DateTime.Now.ToString(), error.Message);
                 Console.WriteLine(error.Message + " Error de conexion");
                 return ListaSectores;
             }
@@ -103,6 +106,7 @@ namespace Asistencia
             }
             catch (Exception err)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error al configurar el checador :/", DateTime.Now.ToString(), err.Message);
                 Console.WriteLine(err.Message + " No se pudo registrar el Checador - Error de conexion");
                 return "-1";
             }
@@ -133,6 +137,7 @@ namespace Asistencia
             }
             catch (Exception e)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error al recuperar el checador :/", DateTime.Now.ToString(), e.Message);
                 Console.WriteLine(e.Message + " Error de Conexion");
                 return "0";
             }
@@ -166,6 +171,7 @@ namespace Asistencia
             }
             catch (Exception e)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error al obtener la lista de los empleados :/", DateTime.Now.ToString(), e.Message);
                 Console.WriteLine(e.Message);
                 return ListaEmpleados;
             }
@@ -202,7 +208,7 @@ namespace Asistencia
             catch (Exception e)
             {
 
-
+                dBservice.GuardarRegistrosErrores("-1", "Error al recuperar el horario del empleado  :/ -" + Empleado, DateTime.Now.ToString(), e.Message);
                 //Console.WriteLine(e.Message);
                 Console.WriteLine("Error al obtener el Horario");
                 return ListaHorarios;
@@ -240,6 +246,7 @@ namespace Asistencia
             }
             catch (Exception er)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error al enviar la sistencia :/ " + Convert.ToString(asistencia.idGrupoPersona), DateTime.Now.ToString(), er.Message);
                 Console.WriteLine(er.Message + " Error de conexion");
                 return false;
             }
@@ -276,6 +283,7 @@ namespace Asistencia
             }
             catch (Exception e)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error al obtener el banner del checador" , DateTime.Now.ToString(), e.Message);
                 Console.WriteLine(e.Message);
                 Console.WriteLine("Datos: \n" + e.Data);
                 return ListaBanner;
@@ -306,6 +314,7 @@ namespace Asistencia
             }
             catch (Exception e)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error al obtener la imagen :/ ", DateTime.Now.ToString(), e.Message);
                 Console.WriteLine(e.Message + " Error de conexion!");
                 return "null";
             }
@@ -333,6 +342,7 @@ namespace Asistencia
             }
             catch (Exception er)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error al recuperar los datos del checador ", DateTime.Now.ToString(), er.Message);
                 Console.WriteLine(er.Message + "Error de conexion");
                 Checador ch = new Checador() { id = -1 };
                 return ch;
@@ -360,6 +370,7 @@ namespace Asistencia
             }
             catch (Exception e)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error al obtener el logo del cliente :/ ", DateTime.Now.ToString(), e.Message);
                 Console.WriteLine(e.Message + "Error de conexion");
                 return "null";
             }
@@ -396,7 +407,7 @@ namespace Asistencia
             }
             catch (Exception e)
             {
-
+                dBservice.GuardarRegistrosErrores("-1", "Error al obtener la bitacora del checador :/ ", DateTime.Now.ToString(), e.Message);
                 Console.WriteLine(e.Message);
                 return listaBitacora;
             }
@@ -433,6 +444,7 @@ namespace Asistencia
             }
             catch (Exception error)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error al actualizar la conexion del checador :/ ", DateTime.Now.ToString(), error.Message);
                 Console.WriteLine(error.Message + "Error de conexion!");
                 return "Error de conexion";
             }
@@ -469,6 +481,7 @@ namespace Asistencia
             }
             catch (Exception e)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error al actualizar la bitacora :/ ", DateTime.Now.ToString(), e.Message);
                 Console.WriteLine(e.Message + "Error de conexion!");
                 return "Error de conexion";
             }
@@ -501,6 +514,7 @@ namespace Asistencia
             }
             catch (Exception err)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error al obtener el empleado Tarea :/ ", DateTime.Now.ToString(), err.Message);
                 Console.WriteLine(err + " Error de coexion!");
                 empleadoResult.idEmpleado = "-1";
                 return empleadoResult;
@@ -527,6 +541,7 @@ namespace Asistencia
             }
             catch (Exception e)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error al actualizar la configuracion del checador", DateTime.Now.ToString(), e.Message);
                 Console.WriteLine(e);
                 return checadorData;
             }
@@ -553,6 +568,7 @@ namespace Asistencia
             }
             catch (Exception e)
             {
+                dBservice.GuardarRegistrosErrores("-1", "Error la obtener todos los empleados", DateTime.Now.ToString(), e.Message);
                 Console.WriteLine("Error al obtener los empleados");
                 return listaEmpleados;
             }

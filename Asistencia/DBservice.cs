@@ -5,7 +5,6 @@ using Asistencia.Clases;
 using System.Drawing;
 using System.IO;
 using System.Net;
-//API
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -48,6 +47,9 @@ namespace Asistencia
             query = "CREATE TABLE IF NOT EXISTS Iconos (id INTEGER PRIMARY KEY AUTOINCREMENT, Ruta NVARCHAR(255), Nombre NVARCHAR(255))";
             SqliteCommand command8 = new SqliteCommand(query, db);
             command8.ExecuteReader();
+            query = "CREATE TABLE IF NOT EXISTS Log (id INTEGER PRIMARY KEY AUTOINCREMENT, Tarea NVARCHAR(255), Descripcion NVARCHAR(255), FechaTupla NVARCHAR(50), Operacion NVARCHAR(255))";
+            SqliteCommand command9 = new SqliteCommand(query,db);
+            command9.ExecuteReader();
             db.Close();
         }
         public void GuardarUID(String uid)
@@ -991,6 +993,7 @@ namespace Asistencia
             }
             return found;
         }
+
         /*public async List<RecursoBanner> CargarBannerV2(List<RecursoBanner> listaRecurso)
         {
             List<Banner> ListaBanner = new List<Banner>();
@@ -1086,6 +1089,20 @@ namespace Asistencia
             }
         }
         */
+        public void GuardarRegistrosErrores(string Tarea, string Descripcion, string FechaTupla, string Operacion )
+        {
+            var db = new SqliteConnection($"Filename=data.db");
+            db.Open();
+            SqliteCommand cmd = new SqliteCommand();
+            cmd.Connection = db;
+            cmd.CommandText = "INSERT INTO Log Values (null,@Tarea,@Descripcion,@FechaTupla,@Operacion)";
+            cmd.Parameters.AddWithValue("@Tarea", Tarea);
+            cmd.Parameters.AddWithValue("@Descripcion", Descripcion);
+            cmd.Parameters.AddWithValue("@FechaTupla", FechaTupla);
+            cmd.Parameters.AddWithValue("@Operacion", Operacion);
+            cmd.ExecuteNonQuery();
+            db.Close();
+        }
     }
 
 }

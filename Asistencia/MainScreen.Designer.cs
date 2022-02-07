@@ -101,11 +101,10 @@ namespace Asistencia
             this.lblBackReloj.BackColor = System.Drawing.Color.Transparent;
             this.lblBackReloj.Font = new System.Drawing.Font("Microsoft Sans Serif", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBackReloj.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.lblBackReloj.Location = new System.Drawing.Point(580, 432);
-            this.lblBackReloj.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblBackReloj.MinimumSize = new System.Drawing.Size(280, 72);
+            this.lblBackReloj.Location = new System.Drawing.Point(773, 532);
+            this.lblBackReloj.MinimumSize = new System.Drawing.Size(373, 89);
             this.lblBackReloj.Name = "lblBackReloj";
-            this.lblBackReloj.Size = new System.Drawing.Size(284, 73);
+            this.lblBackReloj.Size = new System.Drawing.Size(373, 91);
             this.lblBackReloj.TabIndex = 7;
             this.lblBackReloj.Text = "12:59:59";
             // 
@@ -116,12 +115,12 @@ namespace Asistencia
             this.lblMensaje.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMensaje.ForeColor = System.Drawing.SystemColors.WindowText;
             this.lblMensaje.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.lblMensaje.Location = new System.Drawing.Point(0, 936);
-            this.lblMensaje.Margin = new System.Windows.Forms.Padding(2);
-            this.lblMensaje.MinimumSize = new System.Drawing.Size(1440, 26);
+            this.lblMensaje.Location = new System.Drawing.Point(0, 1152);
+            this.lblMensaje.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lblMensaje.MinimumSize = new System.Drawing.Size(1920, 32);
             this.lblMensaje.Multiline = true;
             this.lblMensaje.Name = "lblMensaje";
-            this.lblMensaje.Size = new System.Drawing.Size(1440, 49);
+            this.lblMensaje.Size = new System.Drawing.Size(1920, 60);
             this.lblMensaje.TabIndex = 8;
             this.lblMensaje.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -136,11 +135,11 @@ namespace Asistencia
             this.groupBox1.Controls.Add(this.txtNombre);
             this.groupBox1.Controls.Add(this.EmpleadoFoto);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(8, 8);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox1.Location = new System.Drawing.Point(11, 10);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(704, 1057);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBox1.Size = new System.Drawing.Size(939, 1301);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Empleado";
@@ -153,11 +152,10 @@ namespace Asistencia
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblEmpresa.AutoSize = true;
             this.lblEmpresa.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEmpresa.Location = new System.Drawing.Point(116, 816);
-            this.lblEmpresa.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblEmpresa.MinimumSize = new System.Drawing.Size(333, 32);
+            this.lblEmpresa.Location = new System.Drawing.Point(155, 1004);
+            this.lblEmpresa.MinimumSize = new System.Drawing.Size(444, 39);
             this.lblEmpresa.Name = "lblEmpresa";
-            this.lblEmpresa.Size = new System.Drawing.Size(473, 33);
+            this.lblEmpresa.Size = new System.Drawing.Size(604, 42);
             this.lblEmpresa.TabIndex = 9;
             this.lblEmpresa.Text = "Suinpac SA de SV (Administración)";
             this.lblEmpresa.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -170,11 +168,10 @@ namespace Asistencia
             this.txtArea.BackColor = System.Drawing.Color.AliceBlue;
             this.txtArea.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.txtArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtArea.Location = new System.Drawing.Point(67, 704);
-            this.txtArea.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.txtArea.MinimumSize = new System.Drawing.Size(560, 32);
+            this.txtArea.Location = new System.Drawing.Point(89, 866);
+            this.txtArea.MinimumSize = new System.Drawing.Size(747, 39);
             this.txtArea.Name = "txtArea";
-            this.txtArea.Size = new System.Drawing.Size(560, 32);
+            this.txtArea.Size = new System.Drawing.Size(747, 39);
             this.txtArea.TabIndex = 4;
             this.txtArea.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -186,11 +183,10 @@ namespace Asistencia
             this.txtNoEmpleado.BackColor = System.Drawing.Color.AliceBlue;
             this.txtNoEmpleado.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.txtNoEmpleado.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNoEmpleado.Location = new System.Drawing.Point(67, 639);
-            this.txtNoEmpleado.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.txtNoEmpleado.MinimumSize = new System.Drawing.Size(560, 32);
+            this.txtNoEmpleado.Location = new System.Drawing.Point(89, 786);
+            this.txtNoEmpleado.MinimumSize = new System.Drawing.Size(747, 39);
             this.txtNoEmpleado.Name = "txtNoEmpleado";
-            this.txtNoEmpleado.Size = new System.Drawing.Size(560, 32);
+            this.txtNoEmpleado.Size = new System.Drawing.Size(747, 39);
             this.txtNoEmpleado.TabIndex = 3;
             this.txtNoEmpleado.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -202,11 +198,10 @@ namespace Asistencia
             this.txtCargo.BackColor = System.Drawing.Color.AliceBlue;
             this.txtCargo.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.txtCargo.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCargo.Location = new System.Drawing.Point(67, 575);
-            this.txtCargo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.txtCargo.MinimumSize = new System.Drawing.Size(560, 32);
+            this.txtCargo.Location = new System.Drawing.Point(89, 708);
+            this.txtCargo.MinimumSize = new System.Drawing.Size(747, 39);
             this.txtCargo.Name = "txtCargo";
-            this.txtCargo.Size = new System.Drawing.Size(560, 32);
+            this.txtCargo.Size = new System.Drawing.Size(747, 39);
             this.txtCargo.TabIndex = 2;
             this.txtCargo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -218,11 +213,10 @@ namespace Asistencia
             this.txtNombre.BackColor = System.Drawing.Color.AliceBlue;
             this.txtNombre.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.txtNombre.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNombre.Location = new System.Drawing.Point(67, 514);
-            this.txtNombre.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.txtNombre.MinimumSize = new System.Drawing.Size(560, 32);
+            this.txtNombre.Location = new System.Drawing.Point(89, 633);
+            this.txtNombre.MinimumSize = new System.Drawing.Size(747, 39);
             this.txtNombre.Name = "txtNombre";
-            this.txtNombre.Size = new System.Drawing.Size(560, 32);
+            this.txtNombre.Size = new System.Drawing.Size(747, 39);
             this.txtNombre.TabIndex = 1;
             this.txtNombre.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -230,10 +224,10 @@ namespace Asistencia
             // 
             this.EmpleadoFoto.Enabled = false;
             this.EmpleadoFoto.Image = global::Asistencia.Properties.Resources.notfound;
-            this.EmpleadoFoto.Location = new System.Drawing.Point(97, 45);
-            this.EmpleadoFoto.Margin = new System.Windows.Forms.Padding(2);
+            this.EmpleadoFoto.Location = new System.Drawing.Point(129, 55);
+            this.EmpleadoFoto.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.EmpleadoFoto.Name = "EmpleadoFoto";
-            this.EmpleadoFoto.Size = new System.Drawing.Size(500, 450);
+            this.EmpleadoFoto.Size = new System.Drawing.Size(667, 554);
             this.EmpleadoFoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.EmpleadoFoto.TabIndex = 0;
             this.EmpleadoFoto.TabStop = false;
@@ -243,11 +237,11 @@ namespace Asistencia
             this.groupBox2.AccessibleDescription = "";
             this.groupBox2.Controls.Add(this.tableLayoutPanel1);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(710, 9);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox2.Location = new System.Drawing.Point(947, 11);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(15);
-            this.groupBox2.Size = new System.Drawing.Size(737, 919);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(20, 18, 20, 18);
+            this.groupBox2.Size = new System.Drawing.Size(983, 1131);
             this.groupBox2.TabIndex = 11;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Asistencia";
@@ -262,27 +256,26 @@ namespace Asistencia
             this.tableLayoutPanel1.Controls.Add(this.lblTipo, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.lblHorario, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.lblReloj, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 18);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(8, 22);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 6;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 184F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 296F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 228F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(727, 899);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 226F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 54F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 364F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 281F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(969, 1106);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // lblAsistencia
             // 
             this.lblAsistencia.AutoSize = true;
-            this.lblAsistencia.Location = new System.Drawing.Point(2, 395);
-            this.lblAsistencia.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblAsistencia.MinimumSize = new System.Drawing.Size(713, 325);
+            this.lblAsistencia.Location = new System.Drawing.Point(3, 485);
+            this.lblAsistencia.MinimumSize = new System.Drawing.Size(951, 400);
             this.lblAsistencia.Name = "lblAsistencia";
-            this.lblAsistencia.Size = new System.Drawing.Size(713, 325);
+            this.lblAsistencia.Size = new System.Drawing.Size(951, 400);
             this.lblAsistencia.TabIndex = 5;
             this.lblAsistencia.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
@@ -290,11 +283,10 @@ namespace Asistencia
             // 
             this.lblRegistro.AutoSize = true;
             this.lblRegistro.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRegistro.Location = new System.Drawing.Point(2, 351);
-            this.lblRegistro.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblRegistro.MinimumSize = new System.Drawing.Size(713, 0);
+            this.lblRegistro.Location = new System.Drawing.Point(3, 431);
+            this.lblRegistro.MinimumSize = new System.Drawing.Size(951, 0);
             this.lblRegistro.Name = "lblRegistro";
-            this.lblRegistro.Size = new System.Drawing.Size(713, 42);
+            this.lblRegistro.Size = new System.Drawing.Size(951, 54);
             this.lblRegistro.TabIndex = 4;
             this.lblRegistro.Text = "Reloj";
             this.lblRegistro.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -303,11 +295,10 @@ namespace Asistencia
             // 
             this.lblTipo.AutoSize = true;
             this.lblTipo.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTipo.Location = new System.Drawing.Point(2, 167);
-            this.lblTipo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblTipo.MinimumSize = new System.Drawing.Size(713, 130);
+            this.lblTipo.Location = new System.Drawing.Point(3, 205);
+            this.lblTipo.MinimumSize = new System.Drawing.Size(951, 160);
             this.lblTipo.Name = "lblTipo";
-            this.lblTipo.Size = new System.Drawing.Size(713, 130);
+            this.lblTipo.Size = new System.Drawing.Size(951, 160);
             this.lblTipo.TabIndex = 3;
             this.lblTipo.Text = "Estado";
             this.lblTipo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -315,11 +306,10 @@ namespace Asistencia
             // lblHorario
             // 
             this.lblHorario.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHorario.Location = new System.Drawing.Point(2, 71);
-            this.lblHorario.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblHorario.MinimumSize = new System.Drawing.Size(713, 0);
+            this.lblHorario.Location = new System.Drawing.Point(3, 87);
+            this.lblHorario.MinimumSize = new System.Drawing.Size(951, 0);
             this.lblHorario.Name = "lblHorario";
-            this.lblHorario.Size = new System.Drawing.Size(713, 96);
+            this.lblHorario.Size = new System.Drawing.Size(951, 118);
             this.lblHorario.TabIndex = 2;
             this.lblHorario.Text = "Reloj";
             this.lblHorario.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -330,11 +320,11 @@ namespace Asistencia
             this.lblReloj.AutoSize = true;
             this.lblReloj.BackColor = System.Drawing.Color.Transparent;
             this.lblReloj.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblReloj.Location = new System.Drawing.Point(2, 40);
-            this.lblReloj.Margin = new System.Windows.Forms.Padding(2, 40, 2, 0);
-            this.lblReloj.MinimumSize = new System.Drawing.Size(713, 0);
+            this.lblReloj.Location = new System.Drawing.Point(3, 49);
+            this.lblReloj.Margin = new System.Windows.Forms.Padding(3, 49, 3, 0);
+            this.lblReloj.MinimumSize = new System.Drawing.Size(951, 0);
             this.lblReloj.Name = "lblReloj";
-            this.lblReloj.Size = new System.Drawing.Size(723, 31);
+            this.lblReloj.Size = new System.Drawing.Size(963, 38);
             this.lblReloj.TabIndex = 1;
             this.lblReloj.Text = "Reloj";
             this.lblReloj.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -379,22 +369,22 @@ namespace Asistencia
             // 
             // MainScreen
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1040, 598);
+            this.ClientSize = new System.Drawing.Size(1387, 736);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lblMensaje);
             this.Controls.Add(this.lblBackReloj);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(2);
-            this.MaximumSize = new System.Drawing.Size(1620, 1170);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MaximumSize = new System.Drawing.Size(2160, 1440);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(1023, 598);
+            this.MinimumSize = new System.Drawing.Size(1364, 736);
             this.Name = "MainScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MainScreen";

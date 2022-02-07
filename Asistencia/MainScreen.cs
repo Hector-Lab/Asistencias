@@ -138,7 +138,6 @@ namespace Asistencia
             //Prueba de descargar archivos
             //control.VerificarAsistencia();
         }
-
         private async void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             //Aqui ejecutamos el codigo del proceso en segundo plano
@@ -162,7 +161,6 @@ namespace Asistencia
             }
             actualizarEmpleados = false;
         }
-
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             //Se lanza al terminar la el proceso en segundo plano
@@ -181,13 +179,11 @@ namespace Asistencia
             }
 
         }
-
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             //Aqui se muesta el proceso de actualizacion
             Console.WriteLine(e.ProgressPercentage.ToString() + "%");
         }
-
         private void tActualizar_Tick(object sender, EventArgs e)
         {
             if (!backgroundWorker1.IsBusy)
@@ -204,7 +200,6 @@ namespace Asistencia
                 resetBanner();
             }
         }
-
         private void Reloj_Tick(object sender, EventArgs e)
         {
             //Falta el block input
@@ -227,7 +222,6 @@ namespace Asistencia
                 ReconectNFC();
             }
         }
-
         private void MainScreen_Load(object sender, EventArgs e)
         {
             ReconectNFC();
@@ -281,7 +275,6 @@ namespace Asistencia
             }
             //ontrol.ObtenerEmpleados();
         }
-
         private void Render_Tick(object sender, EventArgs e)
         {
             Console.WriteLine("Tick - mi index: " + index);
@@ -428,7 +421,6 @@ namespace Asistencia
             bytebuffer = null;
             return bmpNew;
         }
-
         private void torniquete_Tick(object sender, EventArgs e)
         {
             Console.WriteLine("El rele se apaga y se desabilita el timer");
@@ -438,18 +430,15 @@ namespace Asistencia
             estadosTornoquete[currentDeviceIndex] = false;
             torniquete.Enabled = false;
         }
-
         private void Enviar_Tick(object sender, EventArgs e)
         {
             Console.WriteLine("Enviando asistencias");
             control.enviarAsistenciasGuardadas();
         }
-
         private void groupBox1_Enter(object sender, EventArgs e)
         {
 
         }
-
         private Bitmap GetARGB(Image img)
         {
             Bitmap copy = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppArgb);
@@ -460,13 +449,11 @@ namespace Asistencia
             }
             return copy;
         }
-
         private void RelojView_Tick(object sender, EventArgs e)
         {
             Reloj.Enabled = true;
             Render.Enabled = true;
         }
-
         public void elementosVisibles(bool mostrar)
         {
             if (!mostrar)
@@ -610,7 +597,6 @@ namespace Asistencia
                     {
                         EmpleadoFoto.Image = noEncontrado;
                     }
-
                     txtNombre.Text = datosAsistecia.empleado.Nombre;
                     Console.WriteLine(datosAsistecia.empleado.Nombre);
                     txtArea.Text = datosAsistecia.empleado.AreaAdministrativa;
@@ -714,7 +700,6 @@ namespace Asistencia
             }
             NFCUID = "";
         }
-
         private void NFC_stop_Tick(object sender, EventArgs e)
         {
             Render.Enabled = true;
@@ -740,7 +725,6 @@ namespace Asistencia
                 }
             }
         }
-
         private void RenderTexto_Tick(object sender, EventArgs e)
         {
             // es por que se adelanta el index
@@ -758,7 +742,6 @@ namespace Asistencia
             EmpleadoFoto.SizeMode = PictureBoxSizeMode.CenterImage;
             EmpleadoFoto.Image = noEncontrado;
         }
-
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
             EmpleadoFoto.Load(urlFoto);
@@ -772,19 +755,16 @@ namespace Asistencia
             lblBackReloj.Visible = true;
             Render.Enabled = true;
         }
-
         private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
         {
             sintetizer.Speak(vozMensaje);
         }
-
         private void MainScreen_MouseClick(object sender, MouseEventArgs e)
         {
             //Probando metodos en segundo plano
             //backgroundWorker4.RunWorkerAsync();
             
         }
-
         private async void backgroundWorker4_DoWork(object sender, DoWorkEventArgs e)
         {
             Console.WriteLine("Iniciando Actualizion del banner");
