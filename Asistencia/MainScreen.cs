@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Speech.Synthesis;
+//using System.Speech.Synthesis;
 
 #pragma warning disable CS0246 // El nombre del tipo o del espacio de nombres 'USB' no se encontró (¿falta una directiva using o una referencia de ensamblado?)
 #pragma warning restore CS0246 // El nombre del tipo o del espacio de nombres 'USB' no se encontró (¿falta una directiva using o una referencia de ensamblado?)
@@ -52,12 +52,12 @@ namespace Asistencia
         Bitmap currentImage;
         Dictionary<String, String> listaIconos;
         NFCReader nfc;
-        SpeechSynthesizer sintetizer = new SpeechSynthesizer();
+        //SpeechSynthesizer sintetizer = new SpeechSynthesizer();
         bool NFCConnect = false;
         public MainScreen()
         {
             nfc = new NFCReader();
-            sintetizer.SetOutputToDefaultAudioDevice();
+            //sintetizer.SetOutputToDefaultAudioDevice();
             //RelayManager.Init();
             meses = new List<string>();
             meses.Add("Enero");
@@ -618,7 +618,7 @@ namespace Asistencia
                         }
                         lblAsistencia.Text = "Asistencia registrada exitosamente";
 
-                        if (!backgroundWorker3.IsBusy)
+                        /*if (!backgroundWorker3.IsBusy)
                         {
                             try
                             {
@@ -629,7 +629,7 @@ namespace Asistencia
                             {
                                 Console.WriteLine(e.Message);
                             }
-                        }
+                        }*/
 
                     }
                     else
@@ -757,7 +757,7 @@ namespace Asistencia
         }
         private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
         {
-            sintetizer.Speak(vozMensaje);
+            //sintetizer.Speak(vozMensaje);
         }
         private void MainScreen_MouseClick(object sender, MouseEventArgs e)
         {
