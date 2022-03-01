@@ -507,6 +507,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_8065C7D7236E4DE1AE746ABBE594A772"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_80DBCE540A3A6F30A9894761428EBB8C"
         "OwnerKey" = "8:_0F9869558FB0F497B1D0D7542ED8D428"
         "MsmSig" = "8:_UNDEFINED"
@@ -869,12 +875,6 @@
         {
         "MsmKey" = "8:_FCCFCE1EB91D646443B188333B2AACAF"
         "OwnerKey" = "8:_612917597F7447DAAEC6516EDBB7582E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FCCFCE1EB91D646443B188333B2AACAF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1561,6 +1561,12 @@
         "OwnerKey" = "8:_E88462A7BB448E92753803ECA0B3F72A"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_FCCFCE1EB91D646443B188333B2AACAF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -1579,6 +1585,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -1595,6 +1609,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -3639,6 +3669,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8065C7D7236E4DE1AE746ABBE594A772"
+            {
+            "SourcePath" = "8:C:\\Users\\HW\\Desktop\\hourglass.ico"
+            "TargetName" = "8:hourglass.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_E2BAB6F46AF34442A7E5A0675B68B845"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_80DBCE540A3A6F30A9894761428EBB8C"
             {
             "AssemblyRegister" = "3:1"
@@ -5431,15 +5481,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:AsistenciasCongreso"
-        "ProductCode" = "8:{CA78AD14-EC03-4C57-AB65-A71293FFB18D}"
-        "PackageCode" = "8:{62177F3B-C518-4A7B-AF8D-BCBEC1651B84}"
+        "ProductCode" = "8:{5DCDE863-CE19-4893-827D-B30DE3EA71D2}"
+        "PackageCode" = "8:{4F816D91-B4FE-4E0C-A141-AE95A4750B69}"
         "UpgradeCode" = "8:{E97E4CE2-564E-429C-B742-F3F03C661C2D}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.2.0"
         "Manufacturer" = "8:Suinpac"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -5563,7 +5613,21 @@
             "Target" = "8:_612917597F7447DAAEC6516EDBB7582E"
             "Folder" = "8:_87069015F6A248D1B596E168E790EA5E"
             "WorkingFolder" = "8:_E2BAB6F46AF34442A7E5A0675B68B845"
-            "Icon" = "8:"
+            "Icon" = "8:_8065C7D7236E4DE1AE746ABBE594A772"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_C6DC09C7A8404EFE9B97919E2D948F6F"
+            {
+            "Name" = "8:Asistencia"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_612917597F7447DAAEC6516EDBB7582E"
+            "Folder" = "8:_8C06A5AE0113495C979EEAD8D144A0B3"
+            "WorkingFolder" = "8:_E2BAB6F46AF34442A7E5A0675B68B845"
+            "Icon" = "8:_8065C7D7236E4DE1AE746ABBE594A772"
             "Feature" = "8:"
             }
         }
@@ -5995,7 +6059,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_612917597F7447DAAEC6516EDBB7582E"
             {
-            "SourcePath" = "8:..\\Asistencia\\obj\\Debug\\Asistencia.exe"
+            "SourcePath" = "8:..\\Asistencia\\obj\\x86\\Release\\Asistencia.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E2BAB6F46AF34442A7E5A0675B68B845"
