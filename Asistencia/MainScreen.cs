@@ -49,6 +49,8 @@ namespace Asistencia
         bool bannerActualizado = false;
         bool actualizarEmpleados = false;
         bool enviandoDatos = false;
+        String[] ArregloNFC = new String[] { "966bce7c", "9670e5ac", "fda9fcfc", "d392c20c", "0f1b7cae", "961ff1ac", "0ddb9a6c", "967245fc", "fc8bc17c", "96a23f9c", "9670396c", "d94da1dc", "fd6c169c", "0f3b57ce", "0ba07c39", "efe34e0c", "0eb976ce", "fd1e2a0c", "966137bc", "fd56b1dc", "620acbec", "0f2ce9ce", "fc6e543c", "fd6a236c", "fa16d6fc", "fd43830c", "0f3ac13e", "0ef4a25e", "0f2cbb2e", "962d747c", "9671f25c", "da0b55ec", "fa2b79fc", "a3ecae1c", "da0beeec", "fa3d682c", "efdaef4c", "d9f2918c", "d94d449c", "fce819cc", "0f1aa18e", "fa12b84c", "1f107de2", "0ec4be4e", "d9f5fa5c", "0ec3c9ce", "d94ce36c", "fd44218c", "d94bf75c", "fc9b118c", "fc8f87ec", "969111ec", "9629e41c", "9635d68c", "d97ac13c", " 9620285c", "9686b83c", "9623638c", "9699d6cc", "fd8898ac", " 0dd5101c", "9616dfec", "0e94ef7e", "fdd2180c", "fcf6058c", "fca7b05c", " fc9e510c", " d94d213c", "968232dc", " 0f39442e", "968dd8dc", "0dd9f54c", "18e83273", "9663b97c", "961e7d5c", "0bccc049", "0f19f9fe", "fd6d4ecc", "fa143f5c", "0ef2053e", " fd4a3d3c", "efda6ebc", " 924a31f4", "9636713c", "fd6ee52c", "d97bfc7c", "fd35663c", "0e80debe", " fce8008c", "fd79c78c", "fd32056c", "fdaef34c", "96a00cfc", " 0edbf21e", "fc82736c", "9635d37c", "fd3a260c", "9661952c", "fda29a3c", "d94283ac", "962c5eac", " 712a5b8c", "fa2ade9c", "1f9c3de2", "ef8ae1bc", "96768aac", "fa03621c", "d97d8d8c", "d950ffcc", "efb5284c", "fa059c3c", "fc84fb6c", "967af45c", "0eb95d3e", "9634d32c", "968c813c", "fced1fac", "0ed20b0e", " 0ee02e3e", "fd02549c", "fcf1ae8c", "fc7ab44c", "968f8bbc", "963151ac", " fd682a4c", "d94c925c", " fa12fa8c", "fd554a0c", "fd4a9d8c", "0eefd07e", "fd1a218c", "0eb93a2e", "fd50a9ac", "df45e99c", "fc89653c", "9622c38c", " 03f687e9", " d97aa36c", " fdaca2ec", "fc9b152c", " 0eb9f80e", "fd7cab7c", "fa32571c", "fd01ab9c", "fd71d66c", "0ee7e2ee", "fcc54ecc", "fd4284fc", "96a43b1c", " 03ad6e29", "fa27511c", "fa043e4c", "fcccfefc", "fdca7e7c", "fd54d0ec", "0ea1ae3e", "fdcd9ccc", "fd823a5c", "0ea7204e", "fd93063c", "d2a0024c", "0eac2d3e", "fa33f86c", "96369b9c", "0eb9411e", " 0f1ad49e", "fd6e403c", "fd31157c", "fd8c856c", "fd44215c", " fd7dff5c", "fd220f3c", "d979ebac", " fcec829c", "fdc8cb4c", "efe1739c", "efe3469c", " 1f4d34a2", "fcadaf7c", "f9fe86cc", "a4fa990c", "fd69179c", "1f6252b2", "963085ec", "18ee88c3", " 96347f2c", "961f295c", "fa168f1c", "fdbb238c", "de83a27c", "9662ff7c", "963244fc", "fd54752c", " 18ef8663", "96a01bdc", " 1e8dac11", " fa24cc5c", "fdab85ac", "d38c528c" };
+        int contadorNFC = 0;
         Bitmap currentImage;
         Dictionary<String, String> listaIconos;
         NFCReader nfc;
@@ -57,7 +59,7 @@ namespace Asistencia
         public MainScreen()
         {
             nfc = new NFCReader();
-            sintetizer.SetOutputToDefaultAudioDevice();
+           sintetizer.SetOutputToDefaultAudioDevice();
             //RelayManager.Init();
             meses = new List<string>();
             meses.Add("Enero");
@@ -217,9 +219,9 @@ namespace Asistencia
             }
             if (!NFCConnect)
             {
-                nfc = null;
-                nfc = new NFCReader(); 
-                ReconectNFC();
+                //nfc = null;
+                //nfc = new NFCReader(); 
+                //ReconectNFC();
             }
         }
         private void MainScreen_Load(object sender, EventArgs e)
@@ -761,9 +763,10 @@ namespace Asistencia
         }
         private void MainScreen_MouseClick(object sender, MouseEventArgs e)
         {
-            //Probando metodos en segundo plano
-            //backgroundWorker4.RunWorkerAsync();
-            
+            //NOTE: Probando voz en
+            Console.WriteLine( "NFC: " + ArregloNFC[contadorNFC]);
+            NFCUID = ArregloNFC[contadorNFC];
+            contadorNFC++;
         }
         private async void backgroundWorker4_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -774,8 +777,7 @@ namespace Asistencia
         private void ReconectNFC()
         {
             try
-            {
-                Console.WriteLine("Conecion NFC: " + nfc.Connect());
+            {   
                 nfc.CardInserted += new NFCReader.CardEventHandler(NFCTrigger);
                 nfc.CardEjected += new NFCReader.CardEventHandler(NFCRemoved);
                 nfc.DeviceDisconnected += new NFCReader.CardEventHandler(NFCDisconected);
@@ -784,7 +786,6 @@ namespace Asistencia
             }
             catch (Exception error)
             {
-                Console.WriteLine(error.Message);
                 NFCConnect = false;
             }
         }

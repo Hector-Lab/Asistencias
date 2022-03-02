@@ -185,7 +185,7 @@ namespace Asistencia
                         }
                         else
                         {
-                            proceso = dbservice.RegistrarAsistencias(asistenciaPantalla, multipleHorario);
+                            //proceso = dbservice.RegistrarAsistencias(asistenciaPantalla, multipleHorario);
                         }
                         if (proceso == -1)
                         {
