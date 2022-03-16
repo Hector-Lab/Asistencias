@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-//using System.Speech.Synthesis;
+using System.Speech.Synthesis;
 
 #pragma warning disable CS0246 // El nombre del tipo o del espacio de nombres 'USB' no se encontró (¿falta una directiva using o una referencia de ensamblado?)
 #pragma warning restore CS0246 // El nombre del tipo o del espacio de nombres 'USB' no se encontró (¿falta una directiva using o una referencia de ensamblado?)
@@ -49,15 +49,19 @@ namespace Asistencia
         bool bannerActualizado = false;
         bool actualizarEmpleados = false;
         bool enviandoDatos = false;
+        //NOTE: pruebas
+        string[] listNfcTest = new string[] { "18ec3af3", "cc2df7d6", "fa422504", "0d522923", "231705c5", "2373a9d5", "0b91ced3", "1f42d7d2" };
+        int indexNFC = 0;
+        //FIN de pruebas
         Bitmap currentImage;
         Dictionary<String, String> listaIconos;
         NFCReader nfc;
-        //SpeechSynthesizer sintetizer = new SpeechSynthesizer();
+        SpeechSynthesizer sintetizer = new SpeechSynthesizer(); 
         bool NFCConnect = false;
         public MainScreen()
         {
             nfc = new NFCReader();
-            //sintetizer.SetOutputToDefaultAudioDevice();
+            sintetizer.SetOutputToDefaultAudioDevice();
             //RelayManager.Init();
             meses = new List<string>();
             meses.Add("Enero");
@@ -129,14 +133,8 @@ namespace Asistencia
         //Fin del metodo para bloquear el teclado
         private void button1_Click(object sender, EventArgs e)
         {
-            //control.ObtenerEmpleados();
-            //control.datosTest();
-            //lbl.Text = "Esto es una prueba";
-            //control.VerificarAsistencia();
-            //List<Horario> horarios = new List<Horario>();
-            //control.VerificarAsistencia(horarios);
-            //Prueba de descargar archivos
-            //control.VerificarAsistencia();
+            //Calculamos los relleno 
+            control.rellenarHorarios();
         }
         private async void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -148,7 +146,7 @@ namespace Asistencia
             {
                 control.ObtenerEmpleados();
             }
-            control.enviarAsistenciasGuardadas();
+            control.enviarAsistenciasGuardadas(); //NOTE: Es para la vercion de rellendo de asistencias
             if (!actualizarEmpleados)
             {
                 actualizacionCompleta = false;
@@ -188,7 +186,6 @@ namespace Asistencia
         {
             if (!backgroundWorker1.IsBusy)
             {
-                Console.WriteLine("Iniciando Actualizacion");
                 backgroundWorker1.RunWorkerAsync();
             }
             //Verificamos la valides del banner
@@ -217,9 +214,9 @@ namespace Asistencia
             }
             if (!NFCConnect)
             {
-                nfc = null;
-                nfc = new NFCReader(); 
-                ReconectNFC();
+                //nfc = null;
+                //nfc = new NFCReader(); 
+                //ReconectNFC();
             }
         }
         private void MainScreen_Load(object sender, EventArgs e)
@@ -598,7 +595,7 @@ namespace Asistencia
                         EmpleadoFoto.Image = noEncontrado;
                     }
                     txtNombre.Text = datosAsistecia.empleado.Nombre;
-                    Console.WriteLine(datosAsistecia.empleado.Nombre);
+
                     txtArea.Text = datosAsistecia.empleado.AreaAdministrativa;
                     txtCargo.Text = datosAsistecia.empleado.Cargo;
                     txtNoEmpleado.Text = datosAsistecia.empleado.noEmpleado;
@@ -618,7 +615,7 @@ namespace Asistencia
                         }
                         lblAsistencia.Text = "Asistencia registrada exitosamente";
 
-                        /*if (!backgroundWorker3.IsBusy)
+                        if (!backgroundWorker3.IsBusy)
                         {
                             try
                             {
@@ -629,7 +626,7 @@ namespace Asistencia
                             {
                                 Console.WriteLine(e.Message);
                             }
-                        }*/
+                        }
 
                     }
                     else
@@ -757,13 +754,16 @@ namespace Asistencia
         }
         private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
         {
-            //sintetizer.Speak(vozMensaje);
+            sintetizer.Speak(vozMensaje);
+            //NOTE: aqui calculamos los horarios anteriores del empleado
+            control.calcularAsistenciasAnteriores(NFCUID);
         }
         private void MainScreen_MouseClick(object sender, MouseEventArgs e)
         {
-            //Probando metodos en segundo plano
+            //NOTE: probamos el proceso de insercion masiva de asistencias
+            control.rellenarHorarios();
             //backgroundWorker4.RunWorkerAsync();
-            
+
         }
         private async void backgroundWorker4_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -775,7 +775,6 @@ namespace Asistencia
         {
             try
             {
-                Console.WriteLine("Conecion NFC: " + nfc.Connect());
                 nfc.CardInserted += new NFCReader.CardEventHandler(NFCTrigger);
                 nfc.CardEjected += new NFCReader.CardEventHandler(NFCRemoved);
                 nfc.DeviceDisconnected += new NFCReader.CardEventHandler(NFCDisconected);
@@ -784,7 +783,7 @@ namespace Asistencia
             }
             catch (Exception error)
             {
-                Console.WriteLine(error.Message);
+                //Console.WriteLine(error.Message);
                 NFCConnect = false;
             }
         }

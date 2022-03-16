@@ -185,6 +185,7 @@ namespace Asistencia
                         }
                         else
                         {
+                            //TESTING:
                             proceso = dbservice.RegistrarAsistencias(asistenciaPantalla, multipleHorario);
                         }
                         if (proceso == -1)
@@ -487,7 +488,7 @@ namespace Asistencia
             pantalla.HoraSalidaSistema = HoraSalidaSistema;
             return pantalla;
         }
-        public async void enviarAsistenciasGuardadas()
+        public async void enviarAsistenciasGuardadas(String Omision = "0")
         {
             List<DatosAsistencias> listaAsistencias = dbservice.ObtenerDatosAsistencias();
             //Obtenemos el cliente
@@ -832,7 +833,6 @@ namespace Asistencia
                     } //Actualizacion del banner
                     if (bitacora.Tarea == 10)
                     {
-                        Console.WriteLine("Tarea 10");
                         if(worker == null)
                         {
                             worker = new BackgroundWorker();
@@ -968,6 +968,8 @@ namespace Asistencia
             String uid = dbservice.ObtenerItem("Storage:UID");
             String Checador = dbservice.ObtenerItem("Storage:idChecador");
             String nombre = dbservice.ObtenerItem("Storage:Nombre");
+            //NOTE: Validamos si es por omision o envio normal
+            
             enviarAsistenciasGuardadas();
             //Borramos la base de datos
             dbservice.EliminarTabla("Empleado");
@@ -977,6 +979,7 @@ namespace Asistencia
             Console.WriteLine("Configuracion: " + Verificar.Sector);
             if(Verificar.Sector == -1 || Convert.ToString(Verificar.Sector) == "" )
             {
+                Console.WriteLine("Es General");
                 //Es general Actualizamos la configururadcio
                 dbservice.EliminarSectorDB();
                 dbservice.EliminaAplicaSector();
@@ -986,6 +989,7 @@ namespace Asistencia
             }
             else
             {
+                Console.WriteLine("No es general");
                 //No es general Actualizamos el sector y el campo aplica sector
                 dbservice.EliminarSectorDB();
                 dbservice.EliminaAplicaSector();
@@ -1018,7 +1022,123 @@ namespace Asistencia
             Console.WriteLine("Primero paso");
             return dbservice.VerificarBanner();
         }
-        
+        //NOTE: antes empezar el proceso, enviar laas asistencias que halla en la base de datos
+        public void rellenarHorarios()
+        {
+            List<Empleado> listaEmpleados = dbservice.obtnerListaEmpleados();
+            Int32 day = (Int32)DateTime.Now.DayOfWeek;
+            if (day == 7)
+                day = 1;
+            else
+                day--;
+            //NOTE: lo vamos a ingresar directo a la base de datos ( es la mejor opcion para no saturar la memoria )
+            //INDEV: Variables que necesito para la tabla asistencia
+            foreach (Empleado empleado in listaEmpleados)
+            {
+
+                List<Horario> ListaHorario = dbservice.ObtenerHorario(empleado.idEmpleado, Convert.ToString(day));
+                //INDEV insertamos las fechas
+                String Fecha = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+                String FechaTupla = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                String idEmpledo = empleado.idEmpleado;
+                foreach (Horario horarioEmpleado in ListaHorario )
+                {
+                    //Insertamos los detalles de la asistencia ( le restamos un dia por que el proceso es a las 3 de la mañana del dia siguiente )
+                    String HoraAsistenciaEntrada = Convert.ToDateTime(horarioEmpleado.HoraEntrada).AddDays(-1).AddSeconds(1).ToString("yyyy-MM-dd HH:mm:ss"); //NOTE: Registramos la entrada del empleado
+                    String HoraAsistenciaSalida = Convert.ToDateTime(horarioEmpleado.HoraSalida).AddDays(-1).AddSeconds(1).ToString("yyyy-MM-dd HH:mm:ss"); //NOTE: Registramos la salida del empleado
+                    //hacemos la insercion de la asistecia
+                    insertarAsistenciaDetallesPorOmision(
+                        Fecha, FechaTupla, idEmpledo, horarioEmpleado.Grupo, Convert.ToString(ListaHorario.Count), //Datos para la asistencia
+                        horarioEmpleado.HoraEntrada, horarioEmpleado.HoraSalida, (horarioEmpleado.LimiteFaltas == 0 && horarioEmpleado.LimiteRetardos == 0) ? "1" : "9", HoraAsistenciaEntrada, "1");
+                    insertarAsistenciaDetallesPorOmision(
+                        Fecha, FechaTupla, idEmpledo, horarioEmpleado.Grupo, Convert.ToString(ListaHorario.Count), //Datos para la asistencia
+                        horarioEmpleado.HoraEntrada, horarioEmpleado.HoraSalida, (horarioEmpleado.LimiteFaltas == 0 && horarioEmpleado.LimiteRetardos == 0) ? "1" : "9", HoraAsistenciaSalida, "2");
+
+                }
+            }
+            
+        }
+        public void insertarAsistenciaDetallesPorOmision(
+            String Fecha, String FechaTupla, String idEmpleado, String Grupo, String Multiple, //Datos para la asistencia
+            String HoraEntrada, String HoraSalida, String Status, String HorarioAsistencia, String TipoAsistencia
+            )
+        {
+            int idEntrada = dbservice.InsertarAsistenciaRellenar(Fecha, FechaTupla, idEmpleado, Grupo, Multiple );
+            if (idEntrada > 0) // Verificamos que se haya insertado la asistencia
+            {
+                dbservice.InsertarAsistenciaDetalleRellenar(
+                    HoraEntrada,
+                    HoraSalida,
+                    Status,
+                    HorarioAsistencia, //El campo FechaTupla es la hora de entrada el empleado
+                    TipoAsistencia,//Si es entrada es tipo 1
+                    Convert.ToString(idEntrada));
+            }
+        }
+        public void calcularAsistenciasAnteriores( string nfc )
+        {
+            //Obte
+            Empleado empleado = dbservice.ObtenerEmpleado(nfc);
+            Console.WriteLine("Calculando: " + empleado.Nombre);
+            //string horaActual = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
+            byte dia = (byte)DateTime.Now.DayOfWeek;
+            String Fecha = DateTime.Now.ToString("yyyy-MM-dd");
+            String FechaTupla = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+            List<Horario> ListaHorario = dbservice.ObtenerHorario(empleado.idEmpleado,Convert.ToString(dia));
+            List<Horario> ListaHorarioFormato = new List<Horario>();
+            //INDEV: convertimos los datos de salida y entrada al dia de hoy
+            foreach( Horario horarioEmpleado in ListaHorario)
+            {
+                horarioEmpleado.HoraEntrada = Convert.ToDateTime(horarioEmpleado.HoraEntrada).ToString();
+                horarioEmpleado.HoraSalida = Convert.ToDateTime(horarioEmpleado.HoraSalida).ToString();
+                if(Convert.ToDateTime(horarioEmpleado.HoraEntrada) <= DateTime.Now)
+                    ListaHorarioFormato.Add(horarioEmpleado);
+            }
+            
+            foreach( Horario horarioDia in  ListaHorarioFormato)
+            {
+                //Verificamos si es caso de entrada
+                if( Convert.ToDateTime(horarioDia.HoraEntrada) <= DateTime.Now)
+                {
+                    //Agregarmos e registro de entrada ( Verificamos la insercion )
+                    DateTime entradaActualOmision = Convert.ToDateTime(horarioDia.HoraEntrada).AddSeconds(1);
+                    List<AsistenciaDB> asistenciasActuales = dbservice.VerificarAsistenciasPorOmision( empleado.idEmpleado, "1" );
+                    bool found = false;
+                    foreach( AsistenciaDB actual in asistenciasActuales)
+                    {
+                        //NOTE: convertimos los datos de la db en fecha y hora actual
+                        DateTime HoraEntradaDB = Convert.ToDateTime(actual.HoraEntrada);
+                        DateTime HoraSalidaDB = Convert.ToDateTime(actual.HoraSalida);
+                        if( entradaActualOmision >= HoraEntradaDB && entradaActualOmision <= HoraSalidaDB)
+                        {
+                            found = true;
+                        }
+                    }
+                    if(!found)
+                    {
+                        insertarAsistenciaDetallesPorOmision(
+                            Fecha, FechaTupla, empleado.idEmpleado, horarioDia.Grupo, Convert.ToString(ListaHorario.Count), //Datos para la asistencia
+                            Convert.ToDateTime(horarioDia.HoraEntrada).ToString("HH:mm:ss"), Convert.ToDateTime(horarioDia.HoraSalida).ToString("HH:mm:ss"), (horarioDia.LimiteFaltas == 0 && horarioDia.LimiteRetardos == 0) ? "1" : "9", entradaActualOmision.ToString("yyyy-MM-dd HH:mm:ss"), "1");
+                    }
+                }   
+                //Verificamos su es caso de salida
+                if( Convert.ToDateTime( horarioDia.HoraSalida ) <= DateTime.Now)
+                {
+                    //INDEV: verificamos que la hora actual sea mayor a la salidas
+                    if( DateTime.Now > Convert.ToDateTime(horarioDia.HoraSalida))
+                    {
+                        insertarAsistenciaDetallesPorOmision(
+                            Fecha, FechaTupla, empleado.idEmpleado, horarioDia.Grupo, Convert.ToString(ListaHorario.Count), //Datos para la asistencia
+                            Convert.ToDateTime(horarioDia.HoraEntrada).ToString("HH:mm:ss"), Convert.ToDateTime(horarioDia.HoraSalida).ToString("HH:mm:ss"), (horarioDia.LimiteFaltas == 0 && horarioDia.LimiteRetardos == 0) ? "1" : "9", Convert.ToDateTime(horarioDia.HoraSalida).AddSeconds(1).ToString("yyyy-MM-dd HH:mm:ss"), "2");
+                    }
+                }
+
+            }
+
+
+        }
+    
     }
     
 }

@@ -215,12 +215,13 @@ namespace Asistencia
             }
         }
         //Cambiar por un boleano para eliminar de la base de datos en local
-        public async Task<Boolean> EnviarAsistencia(String cl, DatosAsistencias asistencia, List<AsistenciaDetalle> detalles)
+        public async Task<Boolean> EnviarAsistencia(String cl, DatosAsistencias asistencia, List<AsistenciaDetalle> detalles, String Omision = "0")
         {
             try
             {
                 var jsonStringDetalles = JsonConvert.SerializeObject(detalles);
                 var dir = "https://api.servicioenlinea.mx/api-movil/RegistrarAsistenciaChecador";
+                //var dir = "https://api.servicioenlinea.mx/api-movil/RegistrarAsistenciaAgregarAsistenciaTest";
                 HttpClient cliente = new HttpClient();
                 cliente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 //cliente.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
@@ -231,7 +232,8 @@ namespace Asistencia
                     {"FechaTupla",asistencia.FechaTupla },
                     {"idGrupoPersona",Convert.ToString(asistencia.idGrupoPersona)},
                     {"MultipleHorario",Convert.ToString(asistencia.MultipleHorario)},
-                    {"Detalles",jsonStringDetalles.ToString()}
+                    {"Detalles",jsonStringDetalles.ToString()},
+                    {"Omision", Omision}
 
                 };
                 var content = new FormUrlEncodedContent(values);
