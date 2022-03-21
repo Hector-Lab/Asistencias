@@ -75,7 +75,7 @@ namespace Asistencia
             // tActualizar
             // 
             this.tActualizar.Enabled = true;
-            this.tActualizar.Interval = 300000;
+            this.tActualizar.Interval = 480000;
             this.tActualizar.Tick += new System.EventHandler(this.tActualizar_Tick);
             // 
             // Reloj
@@ -332,7 +332,7 @@ namespace Asistencia
             // Enviar
             // 
             this.Enviar.Enabled = true;
-            this.Enviar.Interval = 60000;
+            this.Enviar.Interval = 300000;
             this.Enviar.Tick += new System.EventHandler(this.Enviar_Tick);
             // 
             // torniquete

@@ -9,9 +9,8 @@ namespace Asistencia
 {
     public class DBservice
     {
-        public DBservice()
-        {
-        }
+        const string insersionMasivaAsistencias = "AsistenciaMasivo";
+        public DBservice(){}
         public void CrearTablas()
         {
             //Creamos las tablas si no existen
@@ -1206,7 +1205,66 @@ namespace Asistencia
             return listaAsistenciasDB;
         }
 
+        //NOTE: Metodos para la insercion de asistencias masivos
 
+        public int obtenerProcesoInsercionMasivoAsistencias()
+        {
+            int activo = -1;
+            var db = new SqliteConnection($"Filename=data.db");
+            db.Open();
+            SqliteCommand commad = new SqliteCommand();
+            commad.Connection = db;
+            commad.CommandText = "SELECT value FROM StorageValues WHERE name = @Nombre";
+            commad.Parameters.AddWithValue("@Nombre", insersionMasivaAsistencias);
+            SqliteDataReader reader = commad.ExecuteReader();
+            while ( reader.Read())
+            {
+                activo = reader.GetInt32(0);
+            }
+            db.Close();
+            return activo;
+        }
+        
+        public void PorcesoInsercionMasiva()
+        {
+            var db = new SqliteConnection($"Filename=data.db");
+            db.Open();
+            SqliteCommand commad = new SqliteCommand();
+            commad.CommandText = "INSERT INTO StorageValues (null,name,value) VALUES (@name,@value)";
+            commad.Parameters.AddWithValue("@name", insersionMasivaAsistencias);
+            commad.Parameters.AddWithValue("@value", 1);
+            commad.ExecuteNonQuery();
+            db.Close();
+        }
+        public void ActualizarEstadoTarea(string valor, string name)
+        {
+            var db = new SqliteConnection($"Filename=data.db");
+            db.Open();
+            SqliteCommand command = new SqliteCommand();
+            command.CommandText = "UPDATE StorageValues SET value = @value WHERE name = @name";
+            command.Parameters.AddWithValue("@value", valor );
+            command.Parameters.AddWithValue ("name", name);
+            command.ExecuteScalar();
+            db.Close();
+        }
+        public bool VerificarProcesoInsercion()
+        {
+            bool estadoProceso = false;
+            int EstausProceso = obtenerProcesoInsercionMasivoAsistencias();
+            if (EstausProceso == 1) //NOTE el proceso esta activo,
+                estadoProceso = true;
+            if (EstausProceso == 0) //NOTE: el proceso no esta activo, se cambia a estado activo
+            {
+                ActualizarEstadoTarea("1", insersionMasivaAsistencias);
+                estadoProceso = false;
+            }
+            if (EstausProceso == -1) // NOTE: se crea el registro y se inserta como acitivo
+            {
+                PorcesoInsercionMasiva();
+                estadoProceso = false;
+            }
+            return estadoProceso;
+        }
     }
 
 }

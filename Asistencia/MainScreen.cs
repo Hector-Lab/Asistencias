@@ -49,6 +49,9 @@ namespace Asistencia
         bool bannerActualizado = false;
         bool actualizarEmpleados = false;
         bool enviandoDatos = false;
+        bool InsercionAsistencias = false;
+        //Variable de pruebas
+        bool debug = true;
         //NOTE: pruebas
         string[] listNfcTest = new string[] { "18ec3af3", "cc2df7d6", "fa422504", "0d522923", "231705c5", "2373a9d5", "0b91ced3", "1f42d7d2" };
         int indexNFC = 0;
@@ -56,7 +59,8 @@ namespace Asistencia
         Bitmap currentImage;
         Dictionary<String, String> listaIconos;
         NFCReader nfc;
-        SpeechSynthesizer sintetizer = new SpeechSynthesizer(); 
+        SpeechSynthesizer sintetizer = new SpeechSynthesizer();
+        String Horario = "21:54:00";
         bool NFCConnect = false;
         public MainScreen()
         {
@@ -134,7 +138,7 @@ namespace Asistencia
         private void button1_Click(object sender, EventArgs e)
         {
             //Calculamos los relleno 
-            control.rellenarHorarios();
+            control.RellenarHorariosPrueba();
         }
         private async void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -146,7 +150,6 @@ namespace Asistencia
             {
                 control.ObtenerEmpleados();
             }
-            control.enviarAsistenciasGuardadas(); //NOTE: Es para la vercion de rellendo de asistencias
             if (!actualizarEmpleados)
             {
                 actualizacionCompleta = false;
@@ -155,6 +158,11 @@ namespace Asistencia
                 if (tareas.Contains("3"))
                 {
                     bannerActualizado = true;
+                }
+                if (tareas.Contains("5"))
+                {
+
+                    Horario = tareas.Split('-')[1];
                 }
             }
             actualizarEmpleados = false;
@@ -197,7 +205,7 @@ namespace Asistencia
                 resetBanner();
             }
         }
-        private void Reloj_Tick(object sender, EventArgs e)
+        private async void Reloj_Tick(object sender, EventArgs e)
         {
             //Falta el block input
             if (bannerActualizado)
@@ -218,9 +226,34 @@ namespace Asistencia
                 //nfc = new NFCReader(); 
                 //ReconectNFC();
             }
+            if (DateTime.Now >= Convert.ToDateTime(Horario) && DateTime.Now < Convert.ToDateTime(Horario).AddMinutes(2) )
+            {
+                //Insertamos la tarea de rellenar horarios
+                if (!InsercionAsistencias)
+                {
+
+                    if (!await control.enviarTareaRellenarHorarios())
+                    {
+                        Horario = Convert.ToDateTime(Horario).AddMinutes(3).ToString("hh:mm:ss");
+                        InsercionAsistencias = false;
+                    }
+                    else
+                    {
+                        InsercionAsistencias = true;
+                    }
+
+                }
+                if(DateTime.Now > Convert.ToDateTime(Horario).AddMinutes(5) && InsercionAsistencias)
+                {
+                    Console.WriteLine("Proceso de tarea completo - se reseteo al horario defult " + Horario);
+                    Horario = await control.ObtenerConfiguracion();
+                }
+            }
         }
-        private void MainScreen_Load(object sender, EventArgs e)
+        private async void MainScreen_Load(object sender, EventArgs e)
         {
+            //Descargamos la configuracion del horrario
+            Horario = await control.ObtenerConfiguracion();
             ReconectNFC();
             Render.Enabled = true;
             var fechaActual = DateTime.Now;
@@ -758,12 +791,10 @@ namespace Asistencia
             //NOTE: aqui calculamos los horarios anteriores del empleado
             control.calcularAsistenciasAnteriores(NFCUID);
         }
-        private void MainScreen_MouseClick(object sender, MouseEventArgs e)
+        private async void MainScreen_MouseClick(object sender, MouseEventArgs e)
         {
             //NOTE: probamos el proceso de insercion masiva de asistencias
-            control.rellenarHorarios();
-            //backgroundWorker4.RunWorkerAsync();
-
+            await control.enviarTareaRellenarHorarios();
         }
         private async void backgroundWorker4_DoWork(object sender, DoWorkEventArgs e)
         {
