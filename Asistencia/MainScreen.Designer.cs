@@ -390,7 +390,6 @@ namespace Asistencia
             this.Text = "MainScreen";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.MainScreen_Load);
-            this.Click += new System.EventHandler(this.button1_Click);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainScreen_MouseClick);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

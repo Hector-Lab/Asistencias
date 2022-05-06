@@ -14,5 +14,6 @@ namespace Asistencia.Clases
         public String UID { get; set; }
         public int Estado { get; set; }
         public int? Sector { get; set; }
+        public String HoraRelleno { get; set; }
     }
 }

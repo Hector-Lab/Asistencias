@@ -1265,6 +1265,18 @@ namespace Asistencia
             }
             return estadoProceso;
         }
+        public void GuardarHoraRelleno( string horaRelleno )
+        {
+            var db = new SqliteConnection($"Filename=data.db");
+            db.Open();
+            SqliteCommand command = new SqliteCommand();
+            command.Connection = db;
+            command.CommandText = "INSERT INTO StorageValues VALUES(null,@name,@value)";
+            command.Parameters.AddWithValue("@name", "Storage:Hora");
+            command.Parameters.AddWithValue("@value", horaRelleno);
+            command.ExecuteNonQuery();
+            db.Close();
+        }
     }
 
 }

@@ -575,59 +575,28 @@ namespace Asistencia
                 return listaEmpleados;
             }
         }
-        public async Task<bool> InsertarTareaAsistenciasMasivas(String cl, String checador )
+        public async Task<Boolean> EjecutarScriptAPI( String cl, String fecha, String Dia )
         {
             try
             {
-                String dir = "https://api.servicioenlinea.mx/api-movil/Luminarias/AsistenciasOmisios";
-                HttpClient cliente = new HttpClient();
-                var data = new Dictionary<String, String>
-                {
-                    { "Checador", checador },
-                    { "Cliente",cl }
-                };
-                var values = new FormUrlEncodedContent( data );
-                var result = await cliente.PostAsync( dir, values );
-                string codigoRetorno = await result.Content.ReadAsStringAsync();
-                Console.WriteLine(codigoRetorno);
-                if (codigoRetorno == "400")
-                {
-                    dBservice.GuardarRegistrosErrores("4", "Ya existe una tarea", Convert.ToString(DateTime.Now), "Llamado a la API");
-                }
-                else if (codigoRetorno == "403")
-                {
-                    dBservice.GuardarRegistrosErrores("4", "Error al insertar la tarea a la base de datos", Convert.ToString(DateTime.Now), "Llamado a la API");
-                }
-
-                return (codigoRetorno == "200" || codigoRetorno == "400"); // Si el codigo es 200 o 400 todo se inserto correctamente
-
-            }
-            catch(Exception e)
-            {
-                dBservice.GuardarRegistrosErrores("4", "Error al llamar a la API", Convert.ToString(DateTime.Now), e.Message );
-                return false;
-            }
-        }
-        public async Task<String> AsistenciasConfiguracionRelleno(String cl)
-        {
-            try
-            {
-                string dir = "https://api.servicioenlinea.mx/api-movil/wAsistencias/ConfigurarRelleno";
+                string dir = "https://api.servicioenlinea.mx/api-movil/ReporteC4/masivo";
                 HttpClient cliente = new HttpClient();
                 var data = new Dictionary<string, string>()
                 {
-                    { "Cliente",cl },
+                    {"Cliente",cl},
+                    {"Fecha",fecha },
+                    {"Dia",Dia }
                 };
                 var values = new FormUrlEncodedContent(data);
-                var result = await cliente.PostAsync(dir, values);
-                string Configuraciones = await result.Content.ReadAsStringAsync();
-                Console.WriteLine(Configuraciones);
-                return Configuraciones;
+                var result = await cliente.PostAsync(dir,values);
+                string respuesta = await result.Content.ReadAsStringAsync();
+                Console.Write(respuesta);
+                return true;
             }
-            catch(Exception e)
+            catch ( Exception e )
             {
-                dBservice.GuardarRegistrosErrores("9", "Error al obtener configuracion para la hora: ", Convert.ToString(DateTime.Now), e.Message);
-                return "";
+                dBservice.GuardarRegistrosErrores("9", "Error al rellenar los horarios", Convert.ToString(DateTime.Now), e.Message);
+                return false;
             }
         }
     }

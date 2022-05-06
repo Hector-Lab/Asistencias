@@ -10,8 +10,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Speech.Synthesis;
 
-#pragma warning disable CS0246 // El nombre del tipo o del espacio de nombres 'USB' no se encontró (¿falta una directiva using o una referencia de ensamblado?)
-#pragma warning restore CS0246 // El nombre del tipo o del espacio de nombres 'USB' no se encontró (¿falta una directiva using o una referencia de ensamblado?)
+
 namespace Asistencia
 {
     public partial class MainScreen : Form
@@ -33,7 +32,6 @@ namespace Asistencia
         Color festivoCubrePermiso = Color.FromArgb(35, 109, 224);
         Color sinSueldo = Color.FromArgb(255, 87, 51);
         Color automatico = Color.FromArgb(107, 167, 107);
-        bool ImagenOcupada = false;
         bool actualizacionCompleta = true;
         byte opacity = 255;
         List<RecursoBanner> ListaNombresImg;
@@ -48,8 +46,7 @@ namespace Asistencia
         bool textoCambio = false;
         bool bannerActualizado = false;
         bool actualizarEmpleados = false;
-        bool enviandoDatos = false;
-        bool InsercionAsistencias = false;
+        bool tareaRellenoEjecutada = false;
         //Variable de pruebas
         bool debug = true;
         //NOTE: pruebas
@@ -60,7 +57,7 @@ namespace Asistencia
         Dictionary<String, String> listaIconos;
         NFCReader nfc;
         SpeechSynthesizer sintetizer = new SpeechSynthesizer();
-        String Horario = "21:54:00";
+        String HorarioRelleno = "23:30:00";
         bool NFCConnect = false;
         public MainScreen()
         {
@@ -137,8 +134,6 @@ namespace Asistencia
         //Fin del metodo para bloquear el teclado
         private void button1_Click(object sender, EventArgs e)
         {
-            //Calculamos los relleno 
-            control.RellenarHorariosPrueba();
         }
         private async void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -158,11 +153,10 @@ namespace Asistencia
                 if (tareas.Contains("3"))
                 {
                     bannerActualizado = true;
-                }
-                if (tareas.Contains("5"))
+                }else if( tareas.Contains("Relleno{.-.}") )
                 {
-
-                    Horario = tareas.Split('-')[1];
+                    HorarioRelleno = control.ObtenerHorarioRelleno();
+                    Console.WriteLine("El horario se actualizo: " + HorarioRelleno);
                 }
             }
             actualizarEmpleados = false;
@@ -213,7 +207,9 @@ namespace Asistencia
                 resetBanner();
             }
             lblReloj.Text = FormatoFecha();
-            lblBackReloj.Text = DateTime.Now.ToString("hh:mm:ss");
+            string relojHora = DateTime.Now.ToString("hh:mm:ss");
+            string relojHora24 = DateTime.Now.ToString("HH:mm:ss");
+            lblBackReloj.Text = relojHora;
             //Verificando el nfc_uid
             if (NFCUID != "")
             {
@@ -226,40 +222,27 @@ namespace Asistencia
                 //nfc = new NFCReader(); 
                 //ReconectNFC();
             }
-            if (DateTime.Now >= Convert.ToDateTime(Horario) && DateTime.Now < Convert.ToDateTime(Horario).AddMinutes(2) )
+            //NOTE: Verificamios las condiciones de insercion
+            if(relojHora24 == HorarioRelleno && !tareaRellenoEjecutada)
             {
-                //Insertamos la tarea de rellenar horarios
-                if (!InsercionAsistencias)
-                {
-
-                    if (!await control.enviarTareaRellenarHorarios())
-                    {
-                        Horario = Convert.ToDateTime(Horario).AddMinutes(3).ToString("hh:mm:ss");
-                        InsercionAsistencias = false;
-                    }
-                    else
-                    {
-                        InsercionAsistencias = true;
-                    }
-
-                }
-                if(DateTime.Now > Convert.ToDateTime(Horario).AddMinutes(5) && InsercionAsistencias)
-                {
-                    Console.WriteLine("Proceso de tarea completo - se reseteo al horario defult " + Horario);
-                    Horario = await control.ObtenerConfiguracion();
-                }
+                control.EjecutarScriptAsistencias();
+                tareaRellenoEjecutada = true;
             }
+            else
+            {
+                tareaRellenoEjecutada = false;
+            }
+
         }
         private async void MainScreen_Load(object sender, EventArgs e)
         {
-            //Descargamos la configuracion del horrario
-            Horario = await control.ObtenerConfiguracion();
+
+            //NOTE: obtenemos la configuracion de los horarios
+            
             ReconectNFC();
             Render.Enabled = true;
-            var fechaActual = DateTime.Now;
-            var Actual = fechaActual.Date.ToString("dd-MM-yyyy");
-            var siguiten = Convert.ToDateTime(Actual).AddDays(1).ToString();
             lblEmpresa.Text = control.ObtenerNombreCliente();
+            HorarioRelleno = control.ObtenerHorarioRelleno();
             configurarBanner();
             listaIconos = control.CargarIconosDB();
             actualizarEmpleados = (control.verificarEmpleados() == 0);
@@ -435,22 +418,6 @@ namespace Asistencia
                 }
             }
         }
-        private Bitmap aplicarFiltro(Image img, byte alpah = 255)
-        {
-            Bitmap bmpNew = GetARGB(img);
-            BitmapData bmpData = bmpNew.LockBits(new Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-            IntPtr ptr = bmpData.Scan0;
-            byte[] bytebuffer = new byte[bmpData.Stride * bmpNew.Height];
-            Marshal.Copy(ptr, bytebuffer, 0, bytebuffer.Length);
-            for (int k = 3; k < bytebuffer.Length; k += 4)
-            {
-                bytebuffer[k] = alpah;
-            }
-            Marshal.Copy(bytebuffer, 0, ptr, bytebuffer.Length);
-            bmpNew.UnlockBits(bmpData);
-            bytebuffer = null;
-            return bmpNew;
-        }
         private void torniquete_Tick(object sender, EventArgs e)
         {
             Console.WriteLine("El rele se apaga y se desabilita el timer");
@@ -468,16 +435,6 @@ namespace Asistencia
         private void groupBox1_Enter(object sender, EventArgs e)
         {
 
-        }
-        private Bitmap GetARGB(Image img)
-        {
-            Bitmap copy = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppArgb);
-            using (Graphics graphics = Graphics.FromImage(copy))
-            {
-                graphics.DrawImage(img, new Rectangle(0, 0, copy.Width, copy.Height), new Rectangle(0, 0, copy.Width, copy.Height), GraphicsUnit.Pixel);
-                graphics.Flush();
-            }
-            return copy;
         }
         private void RelojView_Tick(object sender, EventArgs e)
         {
@@ -660,7 +617,7 @@ namespace Asistencia
                                 Console.WriteLine(e.Message);
                             }
                         }
-
+                        //control.calcularAsistenciasAnteriores(NFCUID);
                     }
                     else
                     {
@@ -785,16 +742,14 @@ namespace Asistencia
             lblBackReloj.Visible = true;
             Render.Enabled = true;
         }
-        private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
+        private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e) 
         {
             sintetizer.Speak(vozMensaje);
             //NOTE: aqui calculamos los horarios anteriores del empleado
-            control.calcularAsistenciasAnteriores(NFCUID);
         }
         private async void MainScreen_MouseClick(object sender, MouseEventArgs e)
         {
             //NOTE: probamos el proceso de insercion masiva de asistencias
-            await control.enviarTareaRellenarHorarios();
         }
         private async void backgroundWorker4_DoWork(object sender, DoWorkEventArgs e)
         {
