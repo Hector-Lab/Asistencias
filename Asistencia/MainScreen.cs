@@ -10,8 +10,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Speech.Synthesis;
 
-#pragma warning disable CS0246 // El nombre del tipo o del espacio de nombres 'USB' no se encontró (¿falta una directiva using o una referencia de ensamblado?)
-#pragma warning restore CS0246 // El nombre del tipo o del espacio de nombres 'USB' no se encontró (¿falta una directiva using o una referencia de ensamblado?)
+
 namespace Asistencia
 {
     public partial class MainScreen : Form
@@ -33,7 +32,6 @@ namespace Asistencia
         Color festivoCubrePermiso = Color.FromArgb(35, 109, 224);
         Color sinSueldo = Color.FromArgb(255, 87, 51);
         Color automatico = Color.FromArgb(107, 167, 107);
-        bool ImagenOcupada = false;
         bool actualizacionCompleta = true;
         byte opacity = 255;
         List<RecursoBanner> ListaNombresImg;
@@ -48,11 +46,18 @@ namespace Asistencia
         bool textoCambio = false;
         bool bannerActualizado = false;
         bool actualizarEmpleados = false;
-        bool enviandoDatos = false;
+        bool tareaRellenoEjecutada = false;
+        //Variable de pruebas
+        bool debug = true;
+        //NOTE: pruebas
+        string[] listNfcTest = new string[] { "18ec3af3", "cc2df7d6", "fa422504", "0d522923", "231705c5", "2373a9d5", "0b91ced3", "1f42d7d2" };
+        int indexNFC = 0;
+        //FIN de pruebas
         Bitmap currentImage;
         Dictionary<String, String> listaIconos;
         NFCReader nfc;
         SpeechSynthesizer sintetizer = new SpeechSynthesizer();
+        String HorarioRelleno = "23:30:00";
         bool NFCConnect = false;
         public MainScreen()
         {
@@ -129,14 +134,6 @@ namespace Asistencia
         //Fin del metodo para bloquear el teclado
         private void button1_Click(object sender, EventArgs e)
         {
-            //control.ObtenerEmpleados();
-            //control.datosTest();
-            //lbl.Text = "Esto es una prueba";
-            //control.VerificarAsistencia();
-            //List<Horario> horarios = new List<Horario>();
-            //control.VerificarAsistencia(horarios);
-            //Prueba de descargar archivos
-            //control.VerificarAsistencia();
         }
         private async void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -148,7 +145,6 @@ namespace Asistencia
             {
                 control.ObtenerEmpleados();
             }
-            control.enviarAsistenciasGuardadas();
             if (!actualizarEmpleados)
             {
                 actualizacionCompleta = false;
@@ -157,6 +153,10 @@ namespace Asistencia
                 if (tareas.Contains("3"))
                 {
                     bannerActualizado = true;
+                }else if( tareas.Contains("Relleno{.-.}") )
+                {
+                    HorarioRelleno = control.ObtenerHorarioRelleno();
+                    Console.WriteLine("El horario se actualizo: " + HorarioRelleno);
                 }
             }
             actualizarEmpleados = false;
@@ -188,7 +188,6 @@ namespace Asistencia
         {
             if (!backgroundWorker1.IsBusy)
             {
-                Console.WriteLine("Iniciando Actualizacion");
                 backgroundWorker1.RunWorkerAsync();
             }
             //Verificamos la valides del banner
@@ -200,7 +199,7 @@ namespace Asistencia
                 resetBanner();
             }
         }
-        private void Reloj_Tick(object sender, EventArgs e)
+        private async void Reloj_Tick(object sender, EventArgs e)
         {
             //Falta el block input
             if (bannerActualizado)
@@ -208,7 +207,9 @@ namespace Asistencia
                 resetBanner();
             }
             lblReloj.Text = FormatoFecha();
-            lblBackReloj.Text = DateTime.Now.ToString("hh:mm:ss");
+            string relojHora = DateTime.Now.ToString("hh:mm:ss");
+            string relojHora24 = DateTime.Now.ToString("HH:mm:ss");
+            lblBackReloj.Text = relojHora;
             //Verificando el nfc_uid
             if (NFCUID != "")
             {
@@ -217,19 +218,31 @@ namespace Asistencia
             }
             if (!NFCConnect)
             {
-                nfc = null;
-                nfc = new NFCReader(); 
-                ReconectNFC();
+                //nfc = null;
+                //nfc = new NFCReader(); 
+                //ReconectNFC();
             }
+            //NOTE: Verificamios las condiciones de insercion
+            if(relojHora24 == HorarioRelleno && !tareaRellenoEjecutada)
+            {
+                control.EjecutarScriptAsistencias();
+                tareaRellenoEjecutada = true;
+            }
+            else
+            {
+                tareaRellenoEjecutada = false;
+            }
+
         }
-        private void MainScreen_Load(object sender, EventArgs e)
+        private async void MainScreen_Load(object sender, EventArgs e)
         {
+
+            //NOTE: obtenemos la configuracion de los horarios
+            
             ReconectNFC();
             Render.Enabled = true;
-            var fechaActual = DateTime.Now;
-            var Actual = fechaActual.Date.ToString("dd-MM-yyyy");
-            var siguiten = Convert.ToDateTime(Actual).AddDays(1).ToString();
             lblEmpresa.Text = control.ObtenerNombreCliente();
+            HorarioRelleno = control.ObtenerHorarioRelleno();
             configurarBanner();
             listaIconos = control.CargarIconosDB();
             actualizarEmpleados = (control.verificarEmpleados() == 0);
@@ -405,22 +418,6 @@ namespace Asistencia
                 }
             }
         }
-        private Bitmap aplicarFiltro(Image img, byte alpah = 255)
-        {
-            Bitmap bmpNew = GetARGB(img);
-            BitmapData bmpData = bmpNew.LockBits(new Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-            IntPtr ptr = bmpData.Scan0;
-            byte[] bytebuffer = new byte[bmpData.Stride * bmpNew.Height];
-            Marshal.Copy(ptr, bytebuffer, 0, bytebuffer.Length);
-            for (int k = 3; k < bytebuffer.Length; k += 4)
-            {
-                bytebuffer[k] = alpah;
-            }
-            Marshal.Copy(bytebuffer, 0, ptr, bytebuffer.Length);
-            bmpNew.UnlockBits(bmpData);
-            bytebuffer = null;
-            return bmpNew;
-        }
         private void torniquete_Tick(object sender, EventArgs e)
         {
             Console.WriteLine("El rele se apaga y se desabilita el timer");
@@ -438,16 +435,6 @@ namespace Asistencia
         private void groupBox1_Enter(object sender, EventArgs e)
         {
 
-        }
-        private Bitmap GetARGB(Image img)
-        {
-            Bitmap copy = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppArgb);
-            using (Graphics graphics = Graphics.FromImage(copy))
-            {
-                graphics.DrawImage(img, new Rectangle(0, 0, copy.Width, copy.Height), new Rectangle(0, 0, copy.Width, copy.Height), GraphicsUnit.Pixel);
-                graphics.Flush();
-            }
-            return copy;
         }
         private void RelojView_Tick(object sender, EventArgs e)
         {
@@ -598,7 +585,7 @@ namespace Asistencia
                         EmpleadoFoto.Image = noEncontrado;
                     }
                     txtNombre.Text = datosAsistecia.empleado.Nombre;
-                    Console.WriteLine(datosAsistecia.empleado.Nombre);
+
                     txtArea.Text = datosAsistecia.empleado.AreaAdministrativa;
                     txtCargo.Text = datosAsistecia.empleado.Cargo;
                     txtNoEmpleado.Text = datosAsistecia.empleado.noEmpleado;
@@ -630,7 +617,7 @@ namespace Asistencia
                                 Console.WriteLine(e.Message);
                             }
                         }
-
+                        //control.calcularAsistenciasAnteriores(NFCUID);
                     }
                     else
                     {
@@ -755,15 +742,14 @@ namespace Asistencia
             lblBackReloj.Visible = true;
             Render.Enabled = true;
         }
-        private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
+        private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e) 
         {
             sintetizer.Speak(vozMensaje);
+            //NOTE: aqui calculamos los horarios anteriores del empleado
         }
-        private void MainScreen_MouseClick(object sender, MouseEventArgs e)
+        private async void MainScreen_MouseClick(object sender, MouseEventArgs e)
         {
-            //Probando metodos en segundo plano
-            //backgroundWorker4.RunWorkerAsync();
-            
+            //NOTE: probamos el proceso de insercion masiva de asistencias
         }
         private async void backgroundWorker4_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -775,7 +761,6 @@ namespace Asistencia
         {
             try
             {
-                Console.WriteLine("Conecion NFC: " + nfc.Connect());
                 nfc.CardInserted += new NFCReader.CardEventHandler(NFCTrigger);
                 nfc.CardEjected += new NFCReader.CardEventHandler(NFCRemoved);
                 nfc.DeviceDisconnected += new NFCReader.CardEventHandler(NFCDisconected);
@@ -784,7 +769,7 @@ namespace Asistencia
             }
             catch (Exception error)
             {
-                Console.WriteLine(error.Message);
+                //Console.WriteLine(error.Message);
                 NFCConnect = false;
             }
         }

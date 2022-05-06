@@ -75,7 +75,7 @@ namespace Asistencia
             // tActualizar
             // 
             this.tActualizar.Enabled = true;
-            this.tActualizar.Interval = 300000;
+            this.tActualizar.Interval = 480000;
             this.tActualizar.Tick += new System.EventHandler(this.tActualizar_Tick);
             // 
             // Reloj
@@ -332,7 +332,7 @@ namespace Asistencia
             // Enviar
             // 
             this.Enviar.Enabled = true;
-            this.Enviar.Interval = 60000;
+            this.Enviar.Interval = 300000;
             this.Enviar.Tick += new System.EventHandler(this.Enviar_Tick);
             // 
             // torniquete
@@ -390,7 +390,6 @@ namespace Asistencia
             this.Text = "MainScreen";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.MainScreen_Load);
-            this.Click += new System.EventHandler(this.button1_Click);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainScreen_MouseClick);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

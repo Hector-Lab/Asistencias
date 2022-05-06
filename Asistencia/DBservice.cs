@@ -4,18 +4,13 @@ using Microsoft.Data.Sqlite;
 using Asistencia.Clases;
 using System.Drawing;
 using System.IO;
-using System.Net;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Drawing.Imaging;
+
 namespace Asistencia
 {
     public class DBservice
     {
-        public DBservice()
-        {
-        }
+        const string insersionMasivaAsistencias = "AsistenciaMasivo";
+        public DBservice(){}
         public void CrearTablas()
         {
             //Creamos las tablas si no existen
@@ -919,7 +914,7 @@ namespace Asistencia
             SqliteCommand command = new SqliteCommand();
             command.Connection = db;
             command.CommandText = "DELETE FROM " + tabla;
-            command.ExecuteReader();
+            Console.WriteLine(command.CommandText + " Datos Afectados de la tabla - " + command.ExecuteNonQuery());
             db.Close();
         }
         public void EliminarSectorDB()
@@ -1101,6 +1096,185 @@ namespace Asistencia
             cmd.Parameters.AddWithValue("@FechaTupla", FechaTupla);
             cmd.Parameters.AddWithValue("@Operacion", Operacion);
             cmd.ExecuteNonQuery();
+            db.Close();
+        }
+        public List<Empleado> obtnerListaEmpleados()
+        {
+            List<Empleado> listaEmpleados = new List<Empleado>();
+            var db = new SqliteConnection($"Filename=data.db");
+            db.Open();
+            SqliteCommand cmd = new SqliteCommand();
+            cmd.Connection = db;
+            cmd.CommandText = "SELECT * FROM  Empleado";
+            SqliteDataReader result = cmd.ExecuteReader();
+            while (result.Read())
+            {
+                Empleado empleado = new Empleado();
+                empleado.idEmpleado = result.GetString(1);
+                empleado.Nombre = result.GetString(2);
+                empleado.Nfc_uid = result.GetString(3);
+                empleado.idChecador = result.GetString(4);
+                empleado.noEmpleado = result.GetString(5);
+                empleado.Cargo = result.GetString(6);
+                empleado.AreaAdministrativa = result.GetString(7);
+                empleado.NombrePlaza = result.GetString(8);
+                empleado.Trabajador = result.GetString(9);
+                empleado.Foto = result.GetString(10);
+                listaEmpleados.Add(empleado);
+            }
+            db.Close();
+            return listaEmpleados;
+
+        }
+        /*<summary>
+        Metodo para rellenar las asistencias de los empleado que hacen casoomiso
+        </summary>
+        <param name="Fecha">
+            Fecha de insercion de la asistencias
+        <param>
+        <param name="FechaTupla">
+            Fecha completa en la que se inserto o modifico el registro
+        <param>
+        <param name="idEmpleado">
+            id del empleado al que pertenece la asistencia
+        <param>
+        <param name="GrupoPersona">
+           id del grupo al que pertenece el empleado
+        <param>
+        <param name = "MultipleHorario">
+           Si el usuario tiene mas de un horario de entrada y salida
+        <param>
+        */
+        public int InsertarAsistenciaRellenar(String Fecha, String FechaTupla,String idEmpleado, String GrupoPersona, String MultipleHorario )
+        {
+            var db = new SqliteConnection($"Filename=data.db");
+            db.Open();
+            SqliteCommand cmd = new SqliteCommand();
+            cmd.Connection = db;
+            cmd.CommandText = "INSERT INTO Asistencias VALUES(null,@Fecha,@FechaTupla,@Usuario,@GrupoPersona,@idEmpleado,@MultipleHorario)";
+            cmd.Parameters.AddWithValue("@Fecha", Fecha);
+            cmd.Parameters.AddWithValue("@FechaTupla", FechaTupla);
+            cmd.Parameters.AddWithValue("@Usuario", 3933);
+            cmd.Parameters.AddWithValue("@GrupoPersona", GrupoPersona);
+            cmd.Parameters.AddWithValue("@idEmpleado", idEmpleado);
+            cmd.Parameters.AddWithValue("@MultipleHorario", MultipleHorario);
+            cmd.ExecuteNonQuery();
+            //INDEV: obtenemos el id que se inserto
+            cmd.CommandText = "select last_insert_rowid()";
+            Int64 insertedId = (Int64)cmd.ExecuteScalar();
+            db.Close();
+            return (int)insertedId;
+        }
+        public bool InsertarAsistenciaDetalleRellenar(String HoraEntrada, String HoraSalida, String EstatusAsistencia, String FechaTupla, String Tipo, String idAsistencia)
+        {
+            var db = new SqliteConnection($"Filename=data.db");
+            db.Open();
+            SqliteCommand cmd = new SqliteCommand();
+            cmd.Connection = db;
+            cmd.CommandText = "INSERT INTO AsistenciaDetalle VALUES(null,@HoraEntrada,@HoraSalida,@EstatusAsistencia,@FechaTupla,@Tipo,@idAsistencia)";
+            cmd.Parameters.AddWithValue("@HoraEntrada", HoraEntrada );
+            cmd.Parameters.AddWithValue("@HoraSalida", HoraSalida );
+            cmd.Parameters.AddWithValue("@EstatusAsistencia", EstatusAsistencia );
+            cmd.Parameters.AddWithValue("@FechaTupla", FechaTupla ); //NOTE: la fecha tupla es la hora de asistencia
+            cmd.Parameters.AddWithValue("@Tipo", Tipo);
+            cmd.Parameters.AddWithValue("@idAsistencia", idAsistencia );
+            cmd.ExecuteNonQuery();
+            db.Close();
+            return true;
+        }
+
+        public List<AsistenciaDB> VerificarAsistenciasPorOmision( string idEmpleado, string Tipo )
+        {
+            List<AsistenciaDB> listaAsistenciasDB = new List<AsistenciaDB>();
+            var db = new SqliteConnection($"Filename=data.db");
+            db.Open();
+            SqliteCommand command = new SqliteCommand();
+            command.Connection = db;
+            command.CommandText = "SELECT HoraSalida, HoraEntrada, Tipo FROM AsistenciaDetalle JOIN Asistencias ON ( Asistencias.id = AsistenciaDetalle.idAsistencia ) WHERE idEmpleado = @Empleado AND Tipo = @Tipo";
+            command.Parameters.AddWithValue("@Empleado", idEmpleado);
+            command.Parameters.AddWithValue("@Tipo", Tipo);
+            SqliteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                AsistenciaDB asistencia = new AsistenciaDB();
+                asistencia.HoraEntrada = reader.GetString(1);
+                asistencia.HoraSalida = reader.GetString(0);
+                asistencia.EstatusAsistencia = reader.GetInt32(1);
+                listaAsistenciasDB.Add(asistencia);
+            }
+            return listaAsistenciasDB;
+        }
+
+        //NOTE: Metodos para la insercion de asistencias masivos
+
+        public int obtenerProcesoInsercionMasivoAsistencias()
+        {
+            int activo = -1;
+            var db = new SqliteConnection($"Filename=data.db");
+            db.Open();
+            SqliteCommand commad = new SqliteCommand();
+            commad.Connection = db;
+            commad.CommandText = "SELECT value FROM StorageValues WHERE name = @Nombre";
+            commad.Parameters.AddWithValue("@Nombre", insersionMasivaAsistencias);
+            SqliteDataReader reader = commad.ExecuteReader();
+            while ( reader.Read())
+            {
+                activo = reader.GetInt32(0);
+            }
+            db.Close();
+            return activo;
+        }
+        
+        public void PorcesoInsercionMasiva()
+        {
+            var db = new SqliteConnection($"Filename=data.db");
+            db.Open();
+            SqliteCommand commad = new SqliteCommand();
+            commad.CommandText = "INSERT INTO StorageValues (null,name,value) VALUES (@name,@value)";
+            commad.Parameters.AddWithValue("@name", insersionMasivaAsistencias);
+            commad.Parameters.AddWithValue("@value", 1);
+            commad.ExecuteNonQuery();
+            db.Close();
+        }
+        public void ActualizarEstadoTarea(string valor, string name)
+        {
+            var db = new SqliteConnection($"Filename=data.db");
+            db.Open();
+            SqliteCommand command = new SqliteCommand();
+            command.CommandText = "UPDATE StorageValues SET value = @value WHERE name = @name";
+            command.Parameters.AddWithValue("@value", valor );
+            command.Parameters.AddWithValue ("name", name);
+            command.ExecuteScalar();
+            db.Close();
+        }
+        public bool VerificarProcesoInsercion()
+        {
+            bool estadoProceso = false;
+            int EstausProceso = obtenerProcesoInsercionMasivoAsistencias();
+            if (EstausProceso == 1) //NOTE el proceso esta activo,
+                estadoProceso = true;
+            if (EstausProceso == 0) //NOTE: el proceso no esta activo, se cambia a estado activo
+            {
+                ActualizarEstadoTarea("1", insersionMasivaAsistencias);
+                estadoProceso = false;
+            }
+            if (EstausProceso == -1) // NOTE: se crea el registro y se inserta como acitivo
+            {
+                PorcesoInsercionMasiva();
+                estadoProceso = false;
+            }
+            return estadoProceso;
+        }
+        public void GuardarHoraRelleno( string horaRelleno )
+        {
+            var db = new SqliteConnection($"Filename=data.db");
+            db.Open();
+            SqliteCommand command = new SqliteCommand();
+            command.Connection = db;
+            command.CommandText = "INSERT INTO StorageValues VALUES(null,@name,@value)";
+            command.Parameters.AddWithValue("@name", "Storage:Hora");
+            command.Parameters.AddWithValue("@value", horaRelleno);
+            command.ExecuteNonQuery();
             db.Close();
         }
     }

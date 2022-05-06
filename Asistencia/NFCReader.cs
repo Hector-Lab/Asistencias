@@ -422,7 +422,7 @@ namespace Asistencia
             connActive = true;
             retCode = Card.SCardConnect(hContext, readerName, Card.SCARD_SHARE_SHARED,
                                  Card.SCARD_PROTOCOL_T0 | Card.SCARD_PROTOCOL_T1, ref hCard, ref Protocol);
-            Console.WriteLine(retCode);
+            //Console.WriteLine(retCode);
             if (retCode != Card.SCARD_S_SUCCESS)
             {
                 connActive = false;

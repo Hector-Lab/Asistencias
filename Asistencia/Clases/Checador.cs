@@ -15,5 +15,7 @@ namespace Asistencia.Clases
         public String NombreSector { get; set; }
         public String Sector { get; set; }
         public String AplicaSector { get; set; }
+
+        public string HoraRelleno { get; set; }
     }
 }

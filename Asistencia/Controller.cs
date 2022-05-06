@@ -185,6 +185,7 @@ namespace Asistencia
                         }
                         else
                         {
+                            //TESTING:
                             proceso = dbservice.RegistrarAsistencias(asistenciaPantalla, multipleHorario);
                         }
                         if (proceso == -1)
@@ -379,7 +380,7 @@ namespace Asistencia
                     DateTime horaSalida = Convert.ToDateTime(hora.HoraSalida);
                     DateTime horaEntrada = Convert.ToDateTime(hora.HoraEntrada);
                     DateTime horaEntradaMinimo = horaEntrada.AddMinutes(-30);
-                    DateTime horaSalidaMaximo = horaSalida.AddMinutes(30);
+                    DateTime horaSalidaMaximo = horaSalida.AddMinutes(60);
                     if (!String.IsNullOrEmpty(horaSalidaAnterior)) //Caso de multiples horarios
                     {
                         if (horaActual >= salidaAnterior && horaActual >= horaEntradaMinimo && horaActual < horaSalida)
@@ -487,7 +488,7 @@ namespace Asistencia
             pantalla.HoraSalidaSistema = HoraSalidaSistema;
             return pantalla;
         }
-        public async void enviarAsistenciasGuardadas()
+        public async void enviarAsistenciasGuardadas(String Omision = "0")
         {
             List<DatosAsistencias> listaAsistencias = dbservice.ObtenerDatosAsistencias();
             //Obtenemos el cliente
@@ -753,6 +754,7 @@ namespace Asistencia
             dbservice.GuardarCliente(Convert.ToString(checador.Cliente));
             dbservice.GuardarAplicaSector(Convert.ToString(checador.AplicaSector));
             dbservice.GuardarNombreEmpresa(nombreCliente);
+            dbservice.GuardarHoraRelleno(checador.HoraRelleno);
         }
         public async Task<String> obtenerLogoCliente(String cl)
         {
@@ -803,9 +805,10 @@ namespace Asistencia
                             dbservice.GuardarSector(Convert.ToString(checadorDatos.Sector) == "" ? "-1" : Convert.ToString(checadorDatos.Sector));
                             dbservice.GuardarNombre(checadorDatos.Nombre);
                             dbservice.GuardarUID(checadorDatos.UID);
+                            dbservice.GuardarHoraRelleno(checadorDatos.HoraRelleno+":00");
                             await apiservice.ActualizarConexion(cliente, Convert.ToString(checadorDatos.id), checadorDatos.UID, checadorDatos.Nombre);
                             await apiservice.ActualizarBitacora(cliente, Convert.ToString(checadorDatos.id), Convert.ToString(bitacora.id));
-                            TareasCompletas += bitacora.Tarea + " - " + bitacora.Descripcion + "completa";
+                            TareasCompletas += "Relleno{.-.}";
                         }
                     } //Actualizacion de informacion
                     if (bitacora.Tarea == 2)
@@ -832,7 +835,6 @@ namespace Asistencia
                     } //Actualizacion del banner
                     if (bitacora.Tarea == 10)
                     {
-                        Console.WriteLine("Tarea 10");
                         if(worker == null)
                         {
                             worker = new BackgroundWorker();
@@ -840,11 +842,15 @@ namespace Asistencia
                         
                         if (!worker.IsBusy)
                         {
-                            tarea = Convert.ToString(bitacora.id);
                             worker.DoWork += enviarAsistenciaWorker;
                             worker.RunWorkerAsync();
+                            await apiservice.ActualizarConexion(cliente, Checador, uid, nombre);
+                            Console.WriteLine("Id de la bitacora: " + bitacora.id + " - " + bitacora.idChecador + " - " + cliente);
+                            await apiservice.ActualizarBitacora(cliente, Convert.ToString(bitacora.idChecador), Convert.ToString(bitacora.id));
+                            TareasCompletas += bitacora.Tarea + " - " + bitacora.Descripcion + "completa";
                         }
                     }//Borrado del tablas
+                    
                 }
                 else
                 {
@@ -954,6 +960,10 @@ namespace Asistencia
         {
             return dbservice.ObtenerItem("Storage:Empresa");
         }
+        public String ObtenerHorarioRelleno()
+        {
+            return dbservice.ObtenerItem("Storage:Hora");
+        }
         public void verificarEstructuraDartos()
         {
             List<AsistenciaDetalle> detalles = dbservice.ObtenerDatosAsistenciaDetalles(4);
@@ -968,6 +978,8 @@ namespace Asistencia
             String uid = dbservice.ObtenerItem("Storage:UID");
             String Checador = dbservice.ObtenerItem("Storage:idChecador");
             String nombre = dbservice.ObtenerItem("Storage:Nombre");
+            //NOTE: Validamos si es por omision o envio normal
+            
             enviarAsistenciasGuardadas();
             //Borramos la base de datos
             dbservice.EliminarTabla("Empleado");
@@ -977,6 +989,7 @@ namespace Asistencia
             Console.WriteLine("Configuracion: " + Verificar.Sector);
             if(Verificar.Sector == -1 || Convert.ToString(Verificar.Sector) == "" )
             {
+                Console.WriteLine("Es General");
                 //Es general Actualizamos la configururadcio
                 dbservice.EliminarSectorDB();
                 dbservice.EliminaAplicaSector();
@@ -986,6 +999,7 @@ namespace Asistencia
             }
             else
             {
+                Console.WriteLine("No es general");
                 //No es general Actualizamos el sector y el campo aplica sector
                 dbservice.EliminarSectorDB();
                 dbservice.EliminaAplicaSector();
@@ -995,9 +1009,7 @@ namespace Asistencia
                 ObtenerEmpleados();
 
             }
-            //Actualizamos la conexion
-            await apiservice.ActualizarBitacora(cliente, Checador ,"10");
-            await apiservice.ActualizarConexion(cliente, Checador, uid, nombre);
+
         }
         public async Task<bool> VerificarCambioBanner()
         {
@@ -1018,7 +1030,19 @@ namespace Asistencia
             Console.WriteLine("Primero paso");
             return dbservice.VerificarBanner();
         }
-        
+        //NOTE: antes empezar el proceso, enviar laas asistencias que halla en la base de datos
+        public async void EjecutarScriptAsistencias()
+        {
+            String cliente = dbservice.ObtenerItem("Storage:Cliente");
+            String fecha = DateTime.Now.Date.ToString("yyyy-MM-dd");
+            byte dia = (byte)DateTime.Now.DayOfWeek;
+            Console.WriteLine("Cliente:" + cliente + " Fecha: " + fecha + "  " + dia);
+            bool relleno = await apiservice.EjecutarScriptAPI(cliente,fecha, Convert.ToString(dia));
+            if ( relleno )
+            {
+                Console.WriteLine("Relleno exitoso");
+            }
+        }
     }
     
 }

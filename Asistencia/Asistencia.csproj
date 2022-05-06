@@ -166,12 +166,14 @@
   <ItemGroup>
     <Compile Include="APIservice.cs" />
     <Compile Include="Card.cs" />
+    <Compile Include="Clases\AsistenciaDB.cs" />
     <Compile Include="Clases\AsistenciaDetalle.cs" />
     <Compile Include="Clases\AsistenciaPantalla.cs" />
     <Compile Include="Clases\Banner.cs" />
     <Compile Include="Clases\Bitacora.cs" />
     <Compile Include="Clases\Checador.cs" />
     <Compile Include="Clases\Cliente.cs" />
+    <Compile Include="Clases\Asistencia_Rellenar\DatosAsistenciaRellenar.cs" />
     <Compile Include="Clases\DatosAsistencias.cs" />
     <Compile Include="Clases\DatosChecador.cs" />
     <Compile Include="Clases\Empleado.cs" />
